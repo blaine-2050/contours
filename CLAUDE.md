@@ -1,4 +1,7 @@
 # Contours is a persona blog
+# Inherits from: ~/Athenia/projects/CLAUDE.md (for TypeScript conventions)
+
+## Stack: Node/TypeScript (SvelteKit)
 
 ## v1
 - will be hosted on [Railway](https://railway.com/dashboard) from a GitHub repository.
