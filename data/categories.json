@@ -10,5 +10,9 @@
   {
     "id": "history",
     "name": "history"
+  },
+  {
+    "id": "climate",
+    "name": "Climate"
   }
 ]

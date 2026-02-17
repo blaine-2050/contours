@@ -51,7 +51,7 @@
 - Ready for deployment to Railway
   
 ### questions before remote deployment
-  - if I push this to github and hten use railway tools to deploy, I believe I'll have a working blog seeded with some inital contents.
+  - if I push this to github and then use railway tools to deploy, I believe I'll have a working blog seeded with some inital contents.
   - At that point I expect to be able to use the UI to add a new post and drag an immage to it. I believe the new data will be living on railway. true?
     - if true, then when I deploy a new version, I expect that new content wold be blown away. true?
   - it will be very confientent to ads posts from either my dev environment or from Railway. I think this will require a more sophistocated back end.
