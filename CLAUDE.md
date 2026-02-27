@@ -5,7 +5,7 @@
 
 ## v1
 - will be hosted on [Railway](https://railway.com/dashboard) from a GitHub repository.
-- the name of the GitHub account is urban.huff.2050
+- the name of the GitHub account is blaine-2050
 - the name of the author of Contours is Blaine
 - the initial technology will be
   - node
@@ -40,7 +40,8 @@
 - the system needs to be modular so we can swap out persistence, UIUX, etc. as we progress through V1, V2...VN
 
 ### deployment
-- Railway deployment from GitHub (urban.huff.2050)
+- Railway deployment from GitHub (blaine-2050)
+- See `~/Athenia/projects/CLAUDE.md § Deployment & Infrastructure` for shared conventions
 - adapter-node configured for Railway compatibility
 - Next step: provision MySQL on Railway, run migrations, deploy (V1 M2)
 
