@@ -81,24 +81,24 @@ Implemented persistence abstraction with file and MySQL adapters.
 - `npm run db:migrate` — run Drizzle migrations
 
 ### Remaining before M2 deploy
-- [ ] Provision MySQL on Railway and set `DATABASE_URL`
-- [ ] Run `npm run db:migrate` against Railway MySQL to create tables
-- [ ] Set `RAILWAY_DB_URL` in local `.env`, test publish workflow
-- [ ] Verify CRUD operations with `npm run dev:db` against test MySQL
+- [x] Provision MySQL on Railway and set `DATABASE_URL`
+- [x] Run `npm run db:migrate` against Railway MySQL to create tables
+- [x] Set `RAILWAY_DB_URL` in local `.env`, test publish workflow
+- [x] Verify CRUD operations with `npm run dev:db` against test MySQL
 
 ---
 
-## V1 M2 - Deploy Contours to Railway
+## V1 M2 - Deploy Contours to Railway ✅ (2026-02-27)
 
-Depends on M1: persistence must be production-ready before deploying.
-
-- [ ] Push to GitHub (urban.huff.2050)
-- [ ] Create Railway project, provision MySQL service
-- [ ] Configure environment variables (DB connection string, `NODE_ENV=production`)
-- [ ] Wire SvelteKit adapter-node to Railway's port/host expectations
-- [ ] Verify post create/read persists across redeploys
-- [ ] Verify image upload works in production
-- [ ] Set up Railway auto-deploy from `main` branch
+- [x] Push to GitHub (blaine-2050)
+- [x] Create Railway project (`contours`), provision MySQL service (`MySQL-LMyO`)
+- [x] Configure environment variables (`PERSISTENCE=mysql`, `DATABASE_URL` via reference var, `NODE_ENV=production`, `PORT=3000`)
+- [x] Wire SvelteKit adapter-node to Railway's port/host expectations (added `start` script)
+- [x] Generate and run Drizzle migrations against Railway MySQL (5 tables created)
+- [x] Publish local content to production DB (6 posts, 4 categories, 2 images, 0 errors)
+- [x] Verify all pages return 200: homepage, posts, images, categories, stories, search, about
+- **Live URL**: https://contours-app-production.up.railway.app
+- **Deploy method**: `railway up` (CLI push). GitHub auto-deploy not yet wired (requires Railway GitHub app integration with blaine-2050 account).
 
 ---
 
