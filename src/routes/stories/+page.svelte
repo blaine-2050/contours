@@ -21,10 +21,10 @@
 		<ul>
 			{#each data.stories as story}
 				<li>
-					<a href="/stories/{story.slug}">
-						<strong>{story.title}</strong>
+					<a href="/stories/{story.slug}" class="story-title">
+						{story.title}
 					</a>
-					<span class="meta"> - {formatDateTimeGMT(story.date, story.time)} by {story.author}</span>
+					<span class="meta">{formatDateTimeGMT(story.date, story.time)} by {story.author}</span>
 					{#if story.summary}
 						<p class="summary">{story.summary}</p>
 					{/if}
@@ -44,6 +44,7 @@
 	.intro {
 		color: var(--text-muted);
 		margin-bottom: 1.5rem;
+		font-style: italic;
 	}
 
 	ul {
@@ -52,19 +53,38 @@
 	}
 
 	li {
-		margin: 1.5rem 0;
-		padding-bottom: 1.5rem;
+		padding: 1.25rem 0;
 		border-bottom: 1px solid var(--border);
 	}
 
+	li:first-child {
+		padding-top: 0;
+	}
+
+	.story-title {
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 1.125rem;
+		text-decoration: none;
+	}
+
+	.story-title:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--link);
+	}
+
 	.meta {
+		display: block;
+		font-size: 0.85rem;
 		color: var(--text-muted);
+		margin-top: 0.2rem;
 	}
 
 	.summary {
 		margin-top: 0.5rem;
 		color: var(--text-muted);
 		font-style: italic;
+		font-size: 0.95rem;
 	}
 
 	.empty {
@@ -75,5 +95,7 @@
 		margin-top: 2rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 </style>

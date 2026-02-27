@@ -31,10 +31,10 @@
 		<ul class="results">
 			{#each data.results as result}
 				<li>
-					<a href="/posts/{result.slug}">
-						<strong>{result.title}</strong>
+					<a href="/posts/{result.slug}" class="result-title">
+						{result.title}
 					</a>
-					<span class="meta"> - {formatDateTimeGMT(result.date, result.time)} by {result.author}</span>
+					<span class="meta">{formatDateTimeGMT(result.date, result.time)} by {result.author}</span>
 					{#if result.matchContext}
 						<p class="context">{result.matchContext}</p>
 					{/if}
@@ -53,21 +53,32 @@
 
 	.search-form input {
 		flex: 1;
-		padding: 0.5rem;
+		padding: 0.6rem 0.75rem;
+		font-family: var(--font-body);
 		font-size: 1rem;
 		border: 1px solid var(--border);
-		border-radius: 4px;
-		background: var(--bg);
+		border-radius: 6px;
+		background: var(--bg-surface);
 		color: var(--text);
+		transition: border-color 0.15s;
+	}
+
+	.search-form input:focus {
+		outline: none;
+		border-color: var(--link);
 	}
 
 	.search-form button {
-		padding: 0.5rem 1rem;
+		padding: 0.6rem 1.25rem;
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
+		font-weight: 500;
 		background: var(--link);
 		color: white;
 		border: none;
-		border-radius: 4px;
+		border-radius: 6px;
 		cursor: pointer;
+		transition: background 0.15s;
 	}
 
 	.search-form button:hover {
@@ -76,6 +87,7 @@
 
 	.result-count {
 		color: var(--text-muted);
+		font-size: 0.9rem;
 		margin-bottom: 1rem;
 	}
 
@@ -85,21 +97,35 @@
 	}
 
 	.results li {
-		margin: 1rem 0;
-		padding-bottom: 1rem;
+		padding: 1rem 0;
 		border-bottom: 1px solid var(--border);
 	}
 
+	.result-title {
+		font-family: var(--font-ui);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.result-title:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--link);
+	}
+
 	.meta {
+		display: block;
+		font-size: 0.85rem;
 		color: var(--text-muted);
+		margin-top: 0.2rem;
 	}
 
 	.context {
 		margin-top: 0.5rem;
-		padding: 0.5rem;
-		background: var(--border);
-		border-radius: 4px;
-		font-size: 0.875rem;
+		padding: 0.6rem 0.75rem;
+		background: var(--bg-surface);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		font-size: 0.85rem;
 		color: var(--text-muted);
 		white-space: pre-wrap;
 	}

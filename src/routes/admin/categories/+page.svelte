@@ -18,7 +18,7 @@
 	<h2>Add Category</h2>
 	<form method="POST" action="?/add">
 		<input type="text" name="name" placeholder="Category name" required />
-		<button type="submit">Add</button>
+		<button type="submit" class="btn-primary">Add</button>
 	</form>
 </section>
 
@@ -51,11 +51,6 @@
 		margin-bottom: 2rem;
 	}
 
-	h2 {
-		font-size: 1.25rem;
-		margin-bottom: 1rem;
-	}
-
 	.add-category form {
 		display: flex;
 		gap: 0.5rem;
@@ -63,20 +58,35 @@
 
 	.add-category input {
 		flex: 1;
-		padding: 0.5rem;
+		padding: 0.6rem 0.75rem;
+		font-family: var(--font-body);
 		border: 1px solid var(--border);
-		border-radius: 4px;
-		background: var(--bg);
+		border-radius: 6px;
+		background: var(--bg-surface);
 		color: var(--text);
+		transition: border-color 0.15s;
 	}
 
-	.add-category button {
-		padding: 0.5rem 1rem;
+	.add-category input:focus {
+		outline: none;
+		border-color: var(--link);
+	}
+
+	.btn-primary {
+		padding: 0.6rem 1.25rem;
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
+		font-weight: 500;
 		background: var(--link);
 		color: white;
 		border: none;
-		border-radius: 4px;
+		border-radius: 6px;
 		cursor: pointer;
+		transition: background 0.15s;
+	}
+
+	.btn-primary:hover {
+		background: var(--link-hover);
 	}
 
 	.category-list ul {
@@ -88,17 +98,18 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.5rem 0;
+		padding: 0.6rem 0;
 		border-bottom: 1px solid var(--border);
 	}
 
 	.category-name {
-		font-weight: bold;
+		font-weight: 600;
+		font-family: var(--font-ui);
 	}
 
 	.category-id {
 		color: var(--text-muted);
-		font-size: 0.875rem;
+		font-size: 0.8rem;
 	}
 
 	.remove-form {
@@ -106,13 +117,15 @@
 	}
 
 	.remove-btn {
-		padding: 0.25rem 0.5rem;
+		padding: 0.25rem 0.6rem;
+		font-family: var(--font-ui);
+		font-size: 0.8rem;
 		background: none;
 		color: var(--text-muted);
 		border: 1px solid var(--border);
-		border-radius: 4px;
+		border-radius: 6px;
 		cursor: pointer;
-		font-size: 0.875rem;
+		transition: color 0.15s, border-color 0.15s;
 	}
 
 	.remove-btn:hover {
@@ -127,13 +140,18 @@
 	.error {
 		color: #cc0000;
 		padding: 1rem;
-		background: #ffeeee;
-		border-radius: 4px;
+		background: rgba(204, 0, 0, 0.06);
+		border: 1px solid rgba(204, 0, 0, 0.15);
+		border-radius: 6px;
 		margin-bottom: 1rem;
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 
 	.admin-nav {
 		padding-top: 1rem;
 		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 </style>

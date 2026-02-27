@@ -40,13 +40,14 @@
 
 	.meta {
 		color: var(--text-muted);
+		font-size: 0.9rem;
 	}
 
 	.summary {
 		margin-top: 1rem;
 		font-style: italic;
 		color: var(--text-muted);
-		font-size: 1.1rem;
+		font-size: 1.05rem;
 	}
 
 	.content {
@@ -68,22 +69,11 @@
 		color: var(--link);
 	}
 
-	.content :global(code) {
-		background: var(--border);
-		padding: 0.2em 0.4em;
-		border-radius: 3px;
-	}
-
-	.content :global(blockquote) {
-		border-left: 3px solid var(--border);
-		margin: 1.5rem 0;
-		padding-left: 1rem;
-		color: var(--text-muted);
-	}
-
 	.back {
 		margin-top: 3rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 </style>

@@ -7,7 +7,7 @@
 
 <style>
 	p {
-		line-height: 1.6;
+		line-height: 1.7;
 		margin-top: 1rem;
 	}
 </style>

@@ -3,6 +3,7 @@ import { json, error } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { FileAdapter } from '$lib/server/persistence';
 import { MysqlAdapter } from '$lib/server/persistence/mysql-adapter.js';
+import { logger } from '$lib/server/logger';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async () => {
@@ -14,6 +15,9 @@ export const POST: RequestHandler = async () => {
 	if (!dbUrl) {
 		throw error(500, 'RAILWAY_DB_URL is not configured');
 	}
+
+	logger.info('publish started');
+	const publishStart = performance.now();
 
 	const source = new FileAdapter();
 	const target = new MysqlAdapter(dbUrl);
@@ -79,6 +83,16 @@ export const POST: RequestHandler = async () => {
 	} finally {
 		await target.close();
 	}
+
+	const duration = Math.round(performance.now() - publishStart);
+	logger.info('publish completed', {
+		duration_ms: duration,
+		categories: results.categories.inserted,
+		posts: results.posts.inserted + results.posts.updated,
+		stories: results.stories.inserted + results.stories.updated,
+		images: results.images.synced,
+		errors: results.errors.length
+	});
 
 	return json(results);
 };

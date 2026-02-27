@@ -35,6 +35,10 @@
 	</div>
 </article>
 
+<nav class="back">
+	<a href="/">&larr; All posts</a>
+</nav>
+
 <style>
 	header {
 		margin-bottom: 2rem;
@@ -46,10 +50,37 @@
 
 	.meta {
 		color: var(--text-muted);
+		font-size: 0.9rem;
+	}
+
+	.categories {
+		margin-top: 0.75rem;
+		display: flex;
+		gap: 0.35rem;
+		flex-wrap: wrap;
+	}
+
+	.category-tag {
+		display: inline-block;
+		padding: 0.15rem 0.6rem;
+		background: var(--accent-bg);
+		border-radius: 9999px;
+		font-family: var(--font-ui);
+		font-size: 0.7rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		text-decoration: none;
+		color: var(--link);
+	}
+
+	.category-tag:hover {
+		background: var(--link);
+		color: white;
 	}
 
 	.content {
-		line-height: 1.6;
+		line-height: 1.7;
 	}
 
 	.content :global(h1),
@@ -63,32 +94,6 @@
 		margin: 1rem 0;
 	}
 
-	.content :global(code) {
-		background: var(--border);
-		padding: 0.2em 0.4em;
-		border-radius: 3px;
-	}
-
-	.categories {
-		margin-top: 0.5rem;
-	}
-
-	.category-tag {
-		display: inline-block;
-		padding: 0.2rem 0.5rem;
-		margin-right: 0.5rem;
-		background: var(--border);
-		border-radius: 3px;
-		font-size: 0.875rem;
-		text-decoration: none;
-		color: var(--text);
-	}
-
-	.category-tag:hover {
-		background: var(--link);
-		color: white;
-	}
-
 	.post-image {
 		margin: 0 0 2rem 0;
 	}
@@ -97,5 +102,14 @@
 		max-width: 100%;
 		height: auto;
 		border-radius: 8px;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+	}
+
+	.back {
+		margin-top: 3rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 </style>

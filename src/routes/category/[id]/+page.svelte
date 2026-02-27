@@ -18,10 +18,10 @@
 		<ul>
 			{#each data.posts as post}
 				<li>
-					<a href="/posts/{post.slug}">
-						<strong>{post.title}</strong>
+					<a href="/posts/{post.slug}" class="post-title">
+						{post.title}
 					</a>
-					<span class="meta"> - {formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
+					<span class="meta">{formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
 				</li>
 			{/each}
 		</ul>
@@ -43,11 +43,31 @@
 	}
 
 	li {
-		margin: 1rem 0;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	li:first-child {
+		padding-top: 0;
+	}
+
+	.post-title {
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 1.125rem;
+		text-decoration: none;
+	}
+
+	.post-title:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--link);
 	}
 
 	.meta {
+		display: block;
+		font-size: 0.85rem;
 		color: var(--text-muted);
+		margin-top: 0.2rem;
 	}
 
 	.empty {
@@ -58,5 +78,7 @@
 		margin-top: 2rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 </style>

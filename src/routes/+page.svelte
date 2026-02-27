@@ -19,10 +19,10 @@
 		<ul>
 			{#each data.posts as post}
 				<li>
-					<a href="/posts/{post.slug}">
-						<strong>{post.title}</strong>
+					<a href="/posts/{post.slug}" class="post-title">
+						{post.title}
 					</a>
-					<span class="meta"> - {formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
+					<span class="meta">{formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
 					{#if post.categories.length > 0}
 						<span class="post-categories">
 							{#each post.categories as category}
@@ -55,32 +55,59 @@
 	}
 
 	li {
-		margin: 1rem 0;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	li:first-child {
+		padding-top: 0;
+	}
+
+	.post-title {
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 1.125rem;
+		text-decoration: none;
+	}
+
+	.post-title:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--link);
 	}
 
 	.meta {
+		display: block;
+		font-size: 0.85rem;
 		color: var(--text-muted);
+		margin-top: 0.2rem;
 	}
 
 	.admin-link {
 		margin-top: 2rem;
 		padding-top: 1rem;
 		border-top: 1px solid var(--border);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 
 	.post-categories {
-		margin-left: 0.5rem;
+		display: inline-flex;
+		gap: 0.35rem;
+		margin-top: 0.4rem;
 	}
 
 	.category-tag {
 		display: inline-block;
-		padding: 0.1rem 0.4rem;
-		margin-left: 0.25rem;
-		background: var(--border);
-		border-radius: 3px;
-		font-size: 0.75rem;
+		padding: 0.15rem 0.6rem;
+		background: var(--accent-bg);
+		border-radius: 9999px;
+		font-family: var(--font-ui);
+		font-size: 0.7rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
 		text-decoration: none;
-		color: var(--text);
+		color: var(--link);
 	}
 
 	.category-tag:hover {

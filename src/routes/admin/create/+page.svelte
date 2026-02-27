@@ -150,7 +150,7 @@
 		<textarea id="content" name="content" rows="15" required></textarea>
 	</div>
 
-	<button type="submit">Create Post</button>
+	<button type="submit" class="btn-primary">Create Post</button>
 </form>
 
 <style>
@@ -172,44 +172,60 @@
 	label {
 		display: block;
 		margin-bottom: 0.25rem;
-		font-weight: bold;
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 0.875rem;
 	}
 
 	input,
 	textarea {
 		width: 100%;
-		padding: 0.5rem;
+		padding: 0.6rem 0.75rem;
 		font-size: 1rem;
+		font-family: var(--font-body);
 		border: 1px solid var(--border);
-		border-radius: 4px;
-		background: var(--bg);
+		border-radius: 6px;
+		background: var(--bg-surface);
 		color: var(--text);
+		transition: border-color 0.15s;
+	}
+
+	input:focus,
+	textarea:focus {
+		outline: none;
+		border-color: var(--link);
 	}
 
 	textarea {
 		font-family: monospace;
 	}
 
-	button {
+	.btn-primary {
 		padding: 0.75rem 1.5rem;
-		font-size: 1rem;
+		font-family: var(--font-ui);
+		font-size: 0.9rem;
+		font-weight: 500;
 		background: var(--link);
 		color: white;
 		border: none;
-		border-radius: 4px;
+		border-radius: 6px;
 		cursor: pointer;
+		transition: background 0.15s;
 	}
 
-	button:hover {
+	.btn-primary:hover {
 		background: var(--link-hover);
 	}
 
 	.error {
 		color: #cc0000;
 		padding: 1rem;
-		background: #ffeeee;
-		border-radius: 4px;
+		background: rgba(204, 0, 0, 0.06);
+		border: 1px solid rgba(204, 0, 0, 0.15);
+		border-radius: 6px;
 		margin-bottom: 1rem;
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 
 	.categories {
@@ -236,10 +252,6 @@
 		color: var(--text-muted);
 	}
 
-	.hint a {
-		color: var(--link);
-	}
-
 	fieldset.field {
 		border: none;
 		padding: 0;
@@ -249,14 +261,18 @@
 	legend {
 		display: block;
 		margin-bottom: 0.25rem;
-		font-weight: bold;
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 0.875rem;
 		padding: 0;
 	}
 
 	.field-label {
 		display: block;
 		margin-bottom: 0.25rem;
-		font-weight: bold;
+		font-family: var(--font-ui);
+		font-weight: 600;
+		font-size: 0.875rem;
 	}
 
 	.drop-zone {
@@ -271,7 +287,7 @@
 	.drop-zone:hover,
 	.drop-zone.dragging {
 		border-color: var(--link);
-		background-color: var(--bg-hover, rgba(0, 0, 0, 0.02));
+		background-color: var(--accent-bg);
 	}
 
 	.drop-zone.has-image {
@@ -282,6 +298,8 @@
 	.drop-zone p {
 		margin: 0;
 		color: var(--text-muted);
+		font-family: var(--font-ui);
+		font-size: 0.875rem;
 	}
 
 	.image-preview {
@@ -291,7 +309,7 @@
 	.image-preview img {
 		max-width: 100%;
 		max-height: 300px;
-		border-radius: 4px;
+		border-radius: 6px;
 	}
 
 	.remove-image {
@@ -304,7 +322,8 @@
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
-		font-size: 0.875rem;
+		font-family: var(--font-ui);
+		font-size: 0.8rem;
 	}
 
 	.remove-image:hover {
