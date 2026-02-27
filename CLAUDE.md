@@ -11,9 +11,10 @@
   - node
   - typescript
   - SvelteKit with MDsveX for markdown processing
-  - persistence through git
+  - persistence through git (local dev only)
     - using ./posts/*.md for text
     - using ./posts/images for images
+    - production persistence TK (see todo.md V1 M1)
 
 ### use cases
 #### V1
@@ -32,8 +33,8 @@
     - user searchs for post or posts by regex
 
     - user adds a long-form story to website. These are not posts, but appear under 'stories'. They often refer to posts so they need to be able to link to posts. They have dates just like posts, but typically concern more than that date
-#### V2
-      - user can drag and drop an image to the post
+#### V2+
+      - see todo.md for V2 milestones and future work
 
 ### pragmatic technical decisions
 - the system needs to be modular so we can swap out persistence, UIUX, etc. as we progress through V1, V2...VN
@@ -41,21 +42,24 @@
 ### deployment
 - Railway deployment from GitHub (urban.huff.2050)
 - adapter-node configured for Railway compatibility
+- Blocked: git-file persistence won't survive redeploys; need backend first (todo.md V1 M1)
 
 ### current status
-- SvelteKit blog is functional with:
-  - Home page listing posts
-  - Individual post view
-  - Admin page to create new posts
-  - Local markdown file persistence
-- Ready for deployment to Railway
+- V1 feature-complete (2026-01-09):
+  - Home page, post view, admin create, about page
+  - Light/dark mode with localStorage persistence
+  - Category system with management UI and filtering
+  - Drag-and-drop image upload with preview
+  - 24h GMT timestamps, date/time sorting
+  - Regex search across titles and content
+  - Stories section (long-form content, links to posts)
+  - Vitest + Playwright testing infrastructure
+- Blocked on backend persistence before Railway deploy (see todo.md V1 M1)
   
-### questions before remote deployment
-  - if I push this to github and then use railway tools to deploy, I believe I'll have a working blog seeded with some inital contents.
-  - At that point I expect to be able to use the UI to add a new post and drag an immage to it. I believe the new data will be living on railway. true?
-    - if true, then when I deploy a new version, I expect that new content wold be blown away. true?
-  - it will be very confientent to ads posts from either my dev environment or from Railway. I think this will require a more sophistocated back end.
-  - Please advise.
+### persistence decision
+- Git-file persistence (`./posts/*.md`) is local-dev only
+- Production requires a backend (database or object storage) so content survives redeploys
+- This is tracked as V1 M1 in todo.md; Railway deploy (V1 M2) depends on it
 
 ### running locally
 ```bash

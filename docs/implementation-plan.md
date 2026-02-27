@@ -1,13 +1,14 @@
 # Contours Blog Implementation Plan
 
 ## Overview
-Three parallel workstreams to build Contours v1 - a persona blog for Blaine with beads-based project memory.
+
+Architectural reference for Contours v1. For task tracking, see `todo.md`.
 
 **Key Decision Made**: Custom SvelteKit + MDsveX (not swyxkit) for local markdown file support.
 
 ---
 
-## Workstream 1: Blog Setup (Branch: `feature/blog-setup`)
+## Workstream 1: Blog Setup [COMPLETE]
 
 ### Goal
 Set up a SvelteKit blog with local markdown posts in `./posts/*.md`.
@@ -51,10 +52,10 @@ Set up a SvelteKit blog with local markdown posts in `./posts/*.md`.
 
 7. **Configure for local development**
    ```bash
-   npm run dev  # http://localhost:5173
+   npm run dev  # http://localhost:5174
    ```
 
-### Files to Create
+### Files Created
 - `svelte.config.js` - SvelteKit + MDsveX config
 - `src/lib/server/posts.ts` - Post loading/creation logic
 - `src/routes/+page.svelte` - Home page
@@ -65,12 +66,14 @@ Set up a SvelteKit blog with local markdown posts in `./posts/*.md`.
 
 ---
 
-## Workstream 2: Beads Evaluation (Branch: `feature/beads-eval`)
+## Workstream 2: Beads Evaluation [FUTURE - V3+]
 
-### Goal
+Deferred. Beads CLI has a 401 auth blocker. Will revisit when upstream resolves. See `todo.md` Future section.
+
+### Original Goal
 Install beads, create a test harness, and use it for issue tracking.
 
-### Steps
+### Steps (for reference)
 
 1. **Install beads CLI**
    ```bash
@@ -99,7 +102,7 @@ Install beads, create a test harness, and use it for issue tracking.
 
 6. **Document beads workflow** in `docs/beads-setup.md`
 
-### Files to Create
+### Files to Create (when unblocked)
 - `.beads/` - Beads data directory (auto-created)
 - `src/lib/beads/client.ts` - TypeScript wrapper
 - `scripts/beads-harness.ts` - CLI test harness
@@ -107,7 +110,7 @@ Install beads, create a test harness, and use it for issue tracking.
 
 ---
 
-## Workstream 3: Testing (Branch: `feature/testing`)
+## Workstream 3: Testing [COMPLETE]
 
 ### Goal
 Set up testing infrastructure with two specific tests.
@@ -139,7 +142,7 @@ Set up testing infrastructure with two specific tests.
    });
    ```
 
-5. **Implement Test 2: Code Review Issue**
+5. **Implement Test 2: Code Review Issue** (deferred with Beads)
    ```typescript
    // tests/integration/beads-issue.spec.ts
    test('create TypeScript style review issue', async () => {
@@ -158,62 +161,31 @@ Set up testing infrastructure with two specific tests.
    }
    ```
 
-### Files to Create
+### Files Created
 - `vitest.config.ts` - Vitest configuration
 - `playwright.config.ts` - Playwright configuration
 - `tests/e2e/publish-post.spec.ts` - Hello world publication test
-- `tests/integration/beads-issue.spec.ts` - Issue creation test
 - `tests/setup.ts` - Test setup helpers
 
 ---
 
 ## Branch Strategy
 
-```
-main
-├── feature/blog-setup      # Workstream 1
-├── feature/beads-eval      # Workstream 2
-└── feature/testing         # Workstream 3
-```
-
-Each workstream commits to its branch. Plans committed to git (not pushed).
+All work is on `main`. Feature branches were used during initial development and merged back.
 
 ---
 
 ## Verification Checklist
 
-### Blog Setup Verification
-- [ ] `npm run dev` starts local server at localhost:5173
-- [ ] Can create post via admin UI
-- [ ] Post appears in `./posts/` as markdown
-- [ ] Post displays correctly on blog
+### Blog Setup [DONE]
+- [x] `npm run dev` starts local server at localhost:5174
+- [x] Can create post via admin UI
+- [x] Post appears in `./posts/` as markdown
+- [x] Post displays correctly on blog
 
-### Beads Verification
-- [ ] `bd` CLI installed and working
-- [ ] `bd init` creates `.beads/` directory
-- [ ] Test harness can create/list/close issues
-- [ ] Issue "Review current code for good TypeScript style" exists
+### Beads [DEFERRED]
+- [ ] `bd` CLI installed and working (blocked on 401 auth)
 
-### Testing Verification
-- [ ] `npm run test` passes unit/integration tests
-- [ ] `npm run test:e2e` passes Playwright tests
-- [ ] Hello world post successfully published in test
-- [ ] TypeScript style review issue created via test
-
----
-
-## Implementation Order
-
-1. **Parallel Phase**: All three workstreams can start simultaneously on separate branches
-2. **Integration Phase**: Merge branches to main after individual verification
-3. **Final Verification**: Run all tests on main branch
-4. **Commit Plans**: Commit all plan documents to git (no push to origin)
-
----
-
-## Next Steps After Plan Approval
-
-1. Create three feature branches
-2. Implement each workstream (can be parallelized)
-3. Run verification tests
-4. Commit plans and code to git (local only)
+### Testing [DONE]
+- [x] `npm run test` passes unit/integration tests (4 tests)
+- [x] `npm run test:e2e` Playwright configured
