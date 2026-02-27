@@ -1,9 +1,9 @@
-import { getStoryBySlug } from '$lib/server/stories';
+import { getAdapter } from '$lib/server/persistence';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-	const story = getStoryBySlug(params.slug);
+	const story = await getAdapter().getStoryBySlug(params.slug);
 
 	if (!story) {
 		throw error(404, 'Story not found');

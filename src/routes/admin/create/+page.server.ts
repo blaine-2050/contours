@@ -1,10 +1,9 @@
-import { createPost, savePostImage } from '$lib/server/posts';
-import { getCategories } from '$lib/server/categories';
+import { getAdapter } from '$lib/server/persistence';
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const categories = getCategories();
+	const categories = await getAdapter().getCategories();
 	return { categories };
 };
 
@@ -29,13 +28,15 @@ export const actions: Actions = {
 			.replace(/[^a-z0-9]+/g, '-')
 			.replace(/(^-|-$)/g, '');
 
+		const adapter = getAdapter();
+
 		// Save image if provided
 		let imageName: string | undefined;
 		if (imageFile && imageFile.size > 0) {
-			imageName = await savePostImage(imageFile, slug);
+			imageName = await adapter.savePostImage(imageFile, slug);
 		}
 
-		await createPost({
+		await adapter.createPost({
 			title,
 			date,
 			time: time || undefined,

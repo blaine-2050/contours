@@ -1,7 +1,7 @@
-import { getAllStories } from '$lib/server/stories';
+import { getAdapter } from '$lib/server/persistence';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const stories = getAllStories();
+	const stories = await getAdapter().getAllStories();
 	return { stories };
 };

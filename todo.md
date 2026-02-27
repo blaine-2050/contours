@@ -54,26 +54,67 @@ All V1 features shipped. See `docs/implementation-plan.md` for architectural det
 
 ---
 
-## V1 M1 - Backend Persistence
+## V1 M1 - MySQL Persistence ✅ (2026-02-27)
 
-Git-file persistence works for local dev but won't survive Railway redeploys. Need a backend before deploying.
+Implemented persistence abstraction with file and MySQL adapters.
 
-- [ ] Choose persistence backend (database, object storage, or headless CMS)
-- [ ] Implement persistence adapter behind existing interface
-- [ ] Ensure local-dev workflow still uses markdown files
-- [ ] Migrate image storage to chosen backend
+### What was built
+- **Persistence interface** (`PersistenceAdapter`) in `src/lib/server/persistence/types.ts`
+- **File adapter** (`FileAdapter`) — refactored from original modules, zero behavior change
+- **MySQL adapter** (`MysqlAdapter`) — Drizzle ORM with mysql2, all CRUD + search via REGEXP
+- **Schema** — `contours_posts`, `contours_post_categories`, `contours_categories`, `contours_stories`, `contours_images` (MEDIUMBLOB)
+- **Adapter factory** — `getAdapter()` returns FileAdapter by default, MysqlAdapter when `PERSISTENCE=mysql`
+- **Publish endpoint** (`/admin/publish`) — syncs local files to Railway MySQL with upsert logic (insert/update/skip by content hash)
+- **Publish UI** — button + results table at `/admin/publish`
+
+### Environment variables
+| Variable | Where | Purpose |
+|---|---|---|
+| `PERSISTENCE` | Production: `mysql`. Local: unset (defaults `file`) | Adapter selection |
+| `DATABASE_URL` | Production Railway env | App reads/writes via MySQL adapter |
+| `RAILWAY_DB_URL` | Local `.env` only | Publish endpoint connects to remote DB |
+
+### Scripts
+- `npm run dev` — file-based persistence (default, offline)
+- `npm run dev:db` — MySQL persistence mode
+- `npm run db:generate` — generate Drizzle migrations
+- `npm run db:migrate` — run Drizzle migrations
+
+### Remaining before M2 deploy
+- [ ] Provision MySQL on Railway and set `DATABASE_URL`
+- [ ] Run `npm run db:migrate` against Railway MySQL to create tables
+- [ ] Set `RAILWAY_DB_URL` in local `.env`, test publish workflow
+- [ ] Verify CRUD operations with `npm run dev:db` against test MySQL
 
 ---
 
-## V1 M2 - Deploy to Railway
+## V1 M2 - Deploy Contours to Railway
 
 Depends on M1: persistence must be production-ready before deploying.
 
 - [ ] Push to GitHub (urban.huff.2050)
-- [ ] Configure Railway project linked to GitHub repo
-- [ ] Set environment variables for production persistence
-- [ ] Verify post creation persists across redeploys
+- [ ] Create Railway project, provision MySQL service
+- [ ] Configure environment variables (DB connection string, `NODE_ENV=production`)
+- [ ] Wire SvelteKit adapter-node to Railway's port/host expectations
+- [ ] Verify post create/read persists across redeploys
 - [ ] Verify image upload works in production
+- [ ] Set up Railway auto-deploy from `main` branch
+
+---
+
+## V1 M3 - Shared DB Foundation (Crosscutting)
+
+Contours deploys first but sets patterns for track-workout and medbridge.
+This milestone is about documenting and validating the shared approach — not building other apps.
+
+- [ ] Document shared DB conventions in `~/Athenia/projects/CLAUDE.md` or a shared doc:
+  - Table prefix per project (`contours_`, `tw_`, `mb_`)
+  - snake_case table/column names
+  - Common timestamp columns (`created_at`, `updated_at`)
+  - Drizzle as standard ORM for Node projects
+- [ ] Validate that track-workout and medbridge schemas can coexist in the same MySQL instance
+- [ ] Document Railway MySQL provisioning steps (one instance, multiple logical schemas or prefixed tables)
+- [ ] Create a shared connection-config pattern (env vars, connection pooling) reusable across projects
 
 ---
 

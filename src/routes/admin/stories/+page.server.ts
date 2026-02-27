@@ -1,4 +1,4 @@
-import { createStory } from '$lib/server/stories';
+import { getAdapter } from '$lib/server/persistence';
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -16,7 +16,7 @@ export const actions: Actions = {
 			return { error: 'Title, date, and content are required' };
 		}
 
-		const slug = await createStory({
+		const slug = await getAdapter().createStory({
 			title,
 			date,
 			time: time || undefined,

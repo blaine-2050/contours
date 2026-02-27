@@ -1,8 +1,8 @@
-import { getCategories, addCategory, removeCategory } from '$lib/server/categories';
+import { getAdapter } from '$lib/server/persistence';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const categories = getCategories();
+	const categories = await getAdapter().getCategories();
 	return { categories };
 };
 
@@ -15,7 +15,7 @@ export const actions: Actions = {
 			return { error: 'Category name is required' };
 		}
 
-		addCategory(name.trim());
+		await getAdapter().addCategory(name.trim());
 		return { success: true };
 	},
 
@@ -27,7 +27,7 @@ export const actions: Actions = {
 			return { error: 'Category ID is required' };
 		}
 
-		removeCategory(id);
+		await getAdapter().removeCategory(id);
 		return { success: true };
 	}
 };

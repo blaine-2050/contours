@@ -11,10 +11,10 @@
   - node
   - typescript
   - SvelteKit with MDsveX for markdown processing
-  - persistence through git (local dev only)
-    - using ./posts/*.md for text
-    - using ./posts/images for images
-    - production persistence TK (see todo.md V1 M1)
+  - persistence abstraction with two adapters:
+    - **FileAdapter** (default): `./posts/*.md`, `./stories/*.md`, `data/categories.json`, `./posts/images/`
+    - **MysqlAdapter** (production): Drizzle ORM + mysql2, tables prefixed `contours_`
+  - adapter selection via `PERSISTENCE` env var (`file` | `mysql`)
 
 ### use cases
 #### V1
@@ -42,10 +42,10 @@
 ### deployment
 - Railway deployment from GitHub (urban.huff.2050)
 - adapter-node configured for Railway compatibility
-- Blocked: git-file persistence won't survive redeploys; need backend first (todo.md V1 M1)
+- Next step: provision MySQL on Railway, run migrations, deploy (V1 M2)
 
 ### current status
-- V1 feature-complete (2026-01-09):
+- V1 feature-complete (2026-01-09), persistence layer complete (2026-02-27)
   - Home page, post view, admin create, about page
   - Light/dark mode with localStorage persistence
   - Category system with management UI and filtering
@@ -54,19 +54,30 @@
   - Regex search across titles and content
   - Stories section (long-form content, links to posts)
   - Vitest + Playwright testing infrastructure
-- Blocked on backend persistence before Railway deploy (see todo.md V1 M1)
-  
-### persistence decision
-- Git-file persistence (`./posts/*.md`) is local-dev only
-- Production requires a backend (database or object storage) so content survives redeploys
-- This is tracked as V1 M1 in todo.md; Railway deploy (V1 M2) depends on it
+  - PersistenceAdapter interface with FileAdapter + MysqlAdapter
+  - "Publish to Railway" UI at `/admin/publish`
+- Next: V1 M2 (Railway deploy) — see todo.md
+
+### persistence architecture
+- `src/lib/server/persistence/` — all persistence code
+  - `models.ts` — shared interfaces (Post, Category, Story, SearchResult, etc.)
+  - `types.ts` — PersistenceAdapter interface + input types
+  - `file-adapter.ts` — reads/writes markdown files and JSON (local dev)
+  - `mysql-adapter.ts` — Drizzle ORM with mysql2 (production)
+  - `schema.ts` — Drizzle table definitions (contours_ prefixed)
+  - `index.ts` — adapter factory (getAdapter/initAdapter)
+- `src/hooks.server.ts` — initializes adapter at server startup
+- Env vars: `PERSISTENCE` (adapter selection), `DATABASE_URL` (prod MySQL), `RAILWAY_DB_URL` (local publish)
 
 ### running locally
 ```bash
 npm install
-npm run dev      # http://localhost:5174
-npm run build    # production build
-npm run preview  # preview production build
+npm run dev        # http://localhost:5174 (file-based persistence)
+npm run dev:db     # MySQL persistence mode (requires DATABASE_URL)
+npm run build      # production build
+npm run preview    # preview production build
+npm run db:generate # generate Drizzle migrations
+npm run db:migrate  # run Drizzle migrations
 ```
 
 ### testing
@@ -74,3 +85,9 @@ npm run preview  # preview production build
 npm run test     # unit/integration tests
 npm run test:e2e # E2E tests (requires dev server)
 ```
+
+## crosscutting concerns.
+- this project needs to be compatable with some other projects under the /Users/dev/Athenia/projects tree. In particular we will end up with both Python and Node servers on Railway. In additiion we will have multiple apps running on both platforms.
+- This will be the first project deployed, but it will save a lot of work if we design and implement it with that type of future in mind.
+- review the sibling projects track-workout and medbridge for an overview of database needs. Right now, I think all of them can use the same DB and on Railway, MySQL is the best fit.
+- update todo.md as appropriate. it may need some reorganization. It should help us focus on this bloggging app before addtional implementations.

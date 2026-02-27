@@ -15,7 +15,10 @@
 		"test:ui": "vitest --ui",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
-		"test:all": "npm run test && npm run test:e2e"
+		"test:all": "npm run test && npm run test:e2e",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"dev:db": "PERSISTENCE=mysql vite dev --port 5174"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.57.0",
@@ -24,6 +27,7 @@
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@vitest/ui": "^4.0.16",
+		"drizzle-kit": "^0.30.0",
 		"svelte": "^5.45.6",
 		"svelte-check": "^4.3.4",
 		"tsx": "^4.21.0",
@@ -32,7 +36,9 @@
 		"vitest": "^4.0.16"
 	},
 	"dependencies": {
+		"drizzle-orm": "^0.38.0",
 		"gray-matter": "^4.0.3",
-		"mdsvex": "^0.12.6"
+		"mdsvex": "^0.12.6",
+		"mysql2": "^3.12.0"
 	}
 }
