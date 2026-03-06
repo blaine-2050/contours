@@ -1,0 +1,31 @@
+2026-03-07 00:06:51
+=== Evaluation A: Playwright MCP API Consumer ===
+Starting test run...
+
+=== Test Results ===
+Date: 2026-03-06
+Tests: 21 passed
+Scenarios covered:
+1. Normal case - Get commits for week with activity ✓
+2. Edge case - Week with no commits ✓
+3. Edge case - Invalid date format ✓
+4. Edge case - Missing required parameters ✓
+5. Generate post from commits via API ✓
+6. Create draft via API ✓
+7. Comparison: MCP Navigation vs Direct Fetch ✓
+8. Summary: MCP vs Direct API Access ✓
+
+Performance Results:
+- MCP Navigation: ~100-120ms average
+- Direct Fetch: ~50-70ms average
+- MCP has ~2x overhead due to browser rendering
+
+Key Findings:
+- MCP works for GET requests via page.goto() + JSON extraction from <pre>
+- Direct fetch is superior for POST/PUT/DELETE operations
+- Error handling: MCP shows HTML pages, fetch returns structured JSON
+- Accessibility tree not useful for JSON (just text blob)
+
+Files created:
+- eval/playwright-mcp-api/api-consumer.spec.ts
+- eval/playwright-mcp-api/README.md
