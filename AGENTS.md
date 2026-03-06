@@ -5,6 +5,24 @@
 
 ---
 
+## Documentation Index
+
+| File | Purpose | When to Read |
+|------|---------|--------------|
+| **AGENTS.md** (this file) | How to coordinate with other agents | **Start here** - before claiming any workstream |
+| [MONITORING.md](./MONITORING.md) | How to track progress and report status | Before starting work - set up your log file |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Commit message conventions and traceability | Before committing - format your commit message |
+| [todo.md](./todo.md) | What work is available and current status | Before claiming work - check what's available |
+| [CLAUDE.md](./CLAUDE.md) | Project context and technical decisions | If you need context on architecture decisions |
+
+**Quick Start:**
+1. Read this file (AGENTS.md) for coordination rules
+2. Check todo.md for available workstreams
+3. Read MONITORING.md for status reporting
+4. Follow CONTRIBUTING.md for commits
+
+---
+
 ## Branch Naming Convention
 
 Each workstream gets its own branch:

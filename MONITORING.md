@@ -1,5 +1,6 @@
 # Multi-Agent Monitoring & Coordination
 
+**Parent:** [AGENTS.md](./AGENTS.md) - Start there for coordination rules  
 **Goal:** Track agent progress, detect blockers, and coordinate without overwhelming you with noise.
 
 ---
