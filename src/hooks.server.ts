@@ -15,18 +15,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event);
 	}
 
-	const start = performance.now();
-	const response = await resolve(event);
-	const duration = Math.round(performance.now() - start);
+	// Run request handling within a logging context with correlation ID
+	return logger.withContext({ method, path }, async () => {
+		const start = performance.now();
+		const response = await resolve(event);
+		const duration = Math.round(performance.now() - start);
 
-	logger.info('request', {
-		method,
-		path,
-		status: response.status,
-		duration_ms: duration,
+		logger.info('request completed', {
+			status: response.status,
+			duration_ms: duration
+		});
+
+		return response;
 	});
-
-	return response;
 };
 
 export const handleError: HandleServerError = async ({ error, event, status, message }) => {
@@ -36,7 +37,8 @@ export const handleError: HandleServerError = async ({ error, event, status, mes
 		path,
 		status,
 		message,
-		stack: error instanceof Error ? error.stack : String(error),
+		error_type: error instanceof Error ? error.constructor.name : typeof error,
+		stack: error instanceof Error ? error.stack : undefined
 	});
 
 	return { message: 'Internal error' };
