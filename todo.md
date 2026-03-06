@@ -406,11 +406,58 @@ Before deploying any V2 changes to Railway:
 
 ---
 
-## Future: Beads (V3+)
+## Phase 4: Git Journal API (V3 Extension)
+
+**Goal:** Build API that extracts git commit history and generates blog posts automatically.
+
+**Context:** This tests Path A (Playwright MCP) vs Path B (Stagehand) on API utilization rather than web scraping.
+
+### Workstream: Git Journal API
+
+**Branch:** `workstream/git-journal-api`  
+**Risk:** Low - new API module, doesn't touch existing code  
+**Shared files:** None - completely new module  
+**Depends on:** Nothing
+
+**API Specification:**
+```typescript
+// GET /api/commits?since=YYYY-MM-DD&until=YYYY-MM-DD
+// Returns: [{ sha, message, date, author, summary }]
+
+// POST /api/generate-post
+// Body: { commits: Commit[], weekStart: string }
+// Returns: { frontmatter: PostFrontmatter, content: string }
+
+// POST /api/create-draft
+// Body: { post: GeneratedPost }
+// Action: Creates draft post in ./posts/
+```
+
+**Tasks:**
+- [x] Create `src/lib/server/git-journal/` module
+- [x] Implement `getCommits(since, until)` using `git log` command
+- [x] Implement `generatePost(commits)` with formatting (no AI, keeps it simple)
+- [x] Implement `createDraft(post)` that writes to ./posts/
+- [x] Add API endpoints at `/api/journal/*`
+- [x] Add manual trigger at `/admin/journal` UI
+- [x] Test with actual commit history from this repo
+
+**Deliverables:**
+- Working API that can generate blog posts from git history
+- Example generated post in ./posts/
+- Documentation in `src/lib/server/git-journal/README.md`
+
+**Future Evaluations:**
+- After API complete, evaluate Path A vs Path B consuming this API
+- Compare: formatting quality, edge case handling, reliability
+
+---
+
+## Future: Beads (V4+)
 
 Beads integration for project memory / issue tracking. Blocked on 401 auth issue with beads CLI. Deferred until upstream resolves.
 
 See `docs/implementation-plan.md` Workstream 2 for original design.
 
 ---
-*Last updated: 2026-03-06*
+*Last updated: 2026-03-06
