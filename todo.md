@@ -447,9 +447,92 @@ Before deploying any V2 changes to Railway:
 - Example generated post in ./posts/
 - Documentation in `src/lib/server/git-journal/README.md`
 
-**Future Evaluations:**
-- After API complete, evaluate Path A vs Path B consuming this API
-- Compare: formatting quality, edge case handling, reliability
+**Evaluations Complete:** ✅
+
+### Evaluation A: Playwright MCP + Git Journal API ✅
+
+**Branch:** `eval/playwright-mcp-api` - **MERGED**  
+**Result:** Direct fetch superior for APIs; MCP only for browser-specific testing
+
+### Evaluation B: Stagehand + Git Journal API ✅
+
+**Branch:** `eval/stagehand-api` - **MERGED**  
+**Result:** Natural language + self-healing valuable for exploration/API drift
+
+---
+
+**Next:** Create shared testing library and generate first blog post
+
+---
+
+### Workstream: Shared Testing Library
+
+**Branch:** `workstream/shared-testing-library`  
+**Location:** `~/Athenia/projects/testing-agent/` (cross-project library)
+**Goal:** Reusable testing utilities based on evaluation findings
+
+**Components:**
+- [ ] `self-healing-client.ts` - Adaptable API client (inspired by Stagehand)
+- [ ] `natural-language-parser.ts` - Parse "last week", "March 1-7" to dates
+- [ ] `api-validator.ts` - Validate API responses with graceful degradation
+- [ ] `retry-logic.ts` - Intelligent retry with exponential backoff
+
+---
+
+### Workstream: Generate Blog Posts from Git History ✅
+
+**Branch:** `workstream/generate-journal-posts`  
+**Goal:** Use Git Journal API to create actual blog posts from commit history
+
+**Tasks:**
+- [x] Generate post for week of 2026-02-24 (V1 M1/M2 work)
+- [x] Generate post for week of 2026-03-03 (V2 Phase 2A/2B/2C work)
+- [x] Review and edit generated posts
+- [x] Publish to blog (remove draft flag)
+- [x] Document the workflow for future posts
+
+**Generated Posts:**
+- `posts/dev-journal-2026-02-24-v1-completion.md` - V1 M1/M2 completion
+- `posts/dev-journal-2026-03-03-v2-foundation.md` - V2 Phases 2A/2B/2C (12 workstreams)
+- `docs/journal-workflow.md` - Documentation for future posts
+
+---
+
+### Workstream: Playwright MCP + Git Journal API
+
+**Branch:** `eval/playwright-mcp-api`  
+**Goal:** Test Path A consuming the Git Journal API  
+**Compare:** API utilization, formatting quality, edge case handling
+
+**Tasks:**
+- [ ] Use Playwright MCP to call `/api/journal/commits`
+- [ ] Generate post using API response
+- [ ] Handle edge cases (empty commits, malformed dates)
+- [ ] Document reliability vs direct API calls
+
+---
+
+### Evaluation B: Stagehand + Git Journal API
+
+**Branch:** `eval/stagehand-api`  
+**Goal:** Test Path B consuming the Git Journal API  
+**Compare:** Self-healing with API changes, natural language API usage
+
+**Tasks:**
+- [ ] Use Stagehand to navigate API consumption
+- [ ] Generate post using natural language instructions
+- [ ] Test self-healing when API response format changes
+- [ ] Document latency vs reliability trade-offs
+
+---
+
+### V3 Decision Point
+
+After both API evaluations:
+- [ ] Compare Path A vs Path B for API utilization
+- [ ] Document recommended approach for multi-project use
+- [ ] Create shared testing library if viable
+- [ ] Update this todo with V3 implementation workstreams
 
 ---
 
