@@ -152,6 +152,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 		if (data.categories && data.categories.length > 0) {
 			await this.db.insert(contoursPostCategories).values(
 				data.categories.map((catId) => ({
+					createdAt: sql`CURRENT_TIMESTAMP`,
 					postSlug: slug,
 					categoryId: catId,
 				}))

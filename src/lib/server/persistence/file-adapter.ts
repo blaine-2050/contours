@@ -195,7 +195,9 @@ ${data.content}`;
 				return [];
 			}
 			const data = fs.readFileSync(categoriesFile, 'utf8');
-			return JSON.parse(data);
+			const categories = JSON.parse(data);
+			// Filter out timestamp fields, return only id and name for interface compatibility
+			return categories.map((c: { id: string; name: string }) => ({ id: c.id, name: c.name }));
 		});
 	}
 
@@ -210,11 +212,20 @@ ${data.content}`;
 			return categories.find((c) => c.id === id)!;
 		}
 
+		const now = new Date().toISOString();
+		// Store with timestamps for DB compatibility
+		const categoryWithTimestamps = { id, name, createdAt: now, updatedAt: now };
 		const category: Category = { id, name };
-		categories.push(category);
 
+		// Read raw file to preserve timestamps
 		ensureDataDir();
-		fs.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2));
+		let rawCategories: Array<{ id: string; name: string; createdAt?: string; updatedAt?: string }> = [];
+		if (fs.existsSync(categoriesFile)) {
+			const data = fs.readFileSync(categoriesFile, 'utf8');
+			rawCategories = JSON.parse(data);
+		}
+		rawCategories.push(categoryWithTimestamps);
+		fs.writeFileSync(categoriesFile, JSON.stringify(rawCategories, null, 2));
 
 		// Invalidate categories cache
 		deleteCache(CACHE_KEYS.CATEGORIES_ALL);
@@ -223,14 +234,19 @@ ${data.content}`;
 	}
 
 	async removeCategory(id: string): Promise<boolean> {
-		const categories = await this.getCategories();
-		const filtered = categories.filter((c) => c.id !== id);
-
-		if (filtered.length === categories.length) {
+		ensureDataDir();
+		if (!fs.existsSync(categoriesFile)) {
 			return false;
 		}
 
-		ensureDataDir();
+		const data = fs.readFileSync(categoriesFile, 'utf8');
+		const rawCategories: Array<{ id: string; name: string; createdAt?: string; updatedAt?: string }> = JSON.parse(data);
+		const filtered = rawCategories.filter((c) => c.id !== id);
+
+		if (filtered.length === rawCategories.length) {
+			return false;
+		}
+
 		fs.writeFileSync(categoriesFile, JSON.stringify(filtered, null, 2));
 
 		// Invalidate categories cache

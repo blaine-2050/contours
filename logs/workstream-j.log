@@ -1,0 +1,33 @@
+Workstream J: Timestamps & Indexes - Completed 2026-03-06
+
+[2026-03-06 12:30 UTC] Started workstream
+[2026-03-06 12:31 UTC] Schema updated in src/lib/server/persistence/schema.ts:
+  - Added `index` import from drizzle-orm/mysql-core
+  - contoursPosts: Added idx_posts_date, idx_posts_slug indexes
+  - contoursPostCategories: Added created_at column
+  - contoursCategories: Added updated_at column, idx_categories_name index
+  - contoursImages: Added updated_at column
+  - contoursStories: Already had both timestamps
+
+[2026-03-06 12:32 UTC] Migration generated: drizzle/0001_small_slyde.sql
+  - ALTER TABLE contours_categories ADD updated_at
+  - ALTER TABLE contours_images ADD updated_at
+  - ALTER TABLE contours_post_categories ADD created_at
+  - CREATE INDEX idx_categories_name
+  - CREATE INDEX idx_posts_date
+  - CREATE INDEX idx_posts_slug
+
+[2026-03-06 12:33 UTC] FileAdapter updated:
+  - getCategories() filters timestamp fields for interface compatibility
+  - addCategory() stores createdAt/updatedAt in JSON
+  - removeCategory() reads raw file to preserve timestamps
+
+[2026-03-06 12:34 UTC] MysqlAdapter updated:
+  - createPost() sets createdAt on post_categories via sql\`CURRENT_TIMESTAMP\`
+  - Timestamps handled by DB defaults (CURRENT_TIMESTAMP) for other tables
+
+[2026-03-06 12:35 UTC] Type check passed: 0 errors
+[2026-03-06 12:36 UTC] Tests passed: 75/75
+
+Production deployment note:
+Run `npm run db:migrate` on Railway after deployment to apply schema changes.

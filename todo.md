@@ -335,16 +335,16 @@ Improve visual hierarchy and readability of post content.
 **Shared files:** `src/lib/server/persistence/schema.ts`, adapters  
 **Depends on:** Nothing
 
-- [ ] Modify `src/lib/server/persistence/schema.ts`
-- [ ] Add `created_at` timestamp to all tables
-- [ ] Add `updated_at` timestamp to all tables
-- [ ] Add database indexes:
+- [x] Modify `src/lib/server/persistence/schema.ts`
+- [x] Add `created_at` timestamp to all tables
+- [x] Add `updated_at` timestamp to all tables
+- [x] Add database indexes:
   - `idx_posts_date` on `contours_posts.date`
   - `idx_posts_slug` on `contours_posts.slug`
   - `idx_categories_name` on `contours_categories.name`
-- [ ] Generate migration: `npm run db:generate`
-- [ ] Test migration locally with `npm run db:migrate`
-- [ ] Update adapters to set timestamps on create/update
+- [x] Generate migration: `npm run db:generate`
+- [x] Test migration locally with `npm run db:migrate`
+- [x] Update adapters to set timestamps on create/update
 
 **Production deployment note:** This requires running `npm run db:migrate` on Railway
 
