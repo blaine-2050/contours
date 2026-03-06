@@ -1,5 +1,9 @@
 # Contours Todo
 
+**Multi-Agent Coordination:** See `AGENTS.md` for branch naming, workflow rules, and conflict resolution.
+
+---
+
 ## V1 Completed
 
 All V1 features shipped. See `docs/implementation-plan.md` for architectural details.
@@ -102,25 +106,19 @@ Implemented persistence abstraction with file and MySQL adapters.
 
 ---
 
-## V1 M3 - Shared DB Foundation (Crosscutting)
+## Phase 2A: Foundation (Can Start Immediately)
 
-Contours deploys first but sets patterns for track-workout and medbridge.
-This milestone is about documenting and validating the shared approach — not building other apps.
+**Prerequisites:** None  
+**Can run in parallel:** All workstreams in this phase  
+**Merge order:** Any order (no conflicts expected)
 
-- [ ] Document shared DB conventions in `~/Athenia/projects/CLAUDE.md` or a shared doc:
-  - Table prefix per project (`contours_`, `tw_`, `mb_`)
-  - snake_case table/column names
-  - Common timestamp columns (`created_at`, `updated_at`)
-  - Drizzle as standard ORM for Node projects
-- [ ] Validate that track-workout and medbridge schemas can coexist in the same MySQL instance
-- [ ] Document Railway MySQL provisioning steps (one instance, multiple logical schemas or prefixed tables)
-- [ ] Create a shared connection-config pattern (env vars, connection pooling) reusable across projects
-
----
-
-## V2 M1 - Typography & Styling
+### V2 M1 - Typography & Styling
 
 Improve visual hierarchy and readability of post content.
+
+**Branch:** `workstream/m1-typography`  
+**Risk:** Low - isolated to CSS and font loading  
+**Shared files:** `src/routes/+layout.svelte` (adds font imports)
 
 - [ ] Add Merriweather font for headings
   - H1: bold, larger size, slightly tighter letter-spacing
@@ -133,6 +131,262 @@ Improve visual hierarchy and readability of post content.
 
 ---
 
+### Workstream A: Input Validation (Zod)
+
+**Branch:** `workstream/a-input-validation`  
+**Risk:** Low - new files only, minimal changes to existing  
+**Shared files:** `+page.server.ts` files (add validation calls)  
+**Depends on:** Nothing
+
+- [ ] Install Zod: `npm install zod`
+- [ ] Create `src/lib/validation/post.ts` with post schema
+- [ ] Create `src/lib/validation/story.ts` with story schema
+- [ ] Add validation to `/admin/create/+page.server.ts` `actions.create`
+- [ ] Add validation to `/admin/stories/+page.server.ts` `actions.create`
+- [ ] Add validation to `/admin/categories/+page.server.ts` `actions.add`
+- [ ] Return validation errors to forms with user-friendly messages
+
+**Future work discovered:**
+- [ ] Add client-side validation for better UX (optional)
+
+---
+
+### Workstream H: ESLint & Prettier Setup
+
+**Branch:** `workstream/h-eslint-prettier`  
+**Risk:** Low - config files only  
+**Shared files:** All `.ts`, `.svelte` files (formatting only)  
+**Depends on:** Nothing  
+**Note:** Run this early - other branches can rebase on it to get formatting
+
+- [ ] Install dev dependencies: `npm install -D eslint @eslint/js typescript-eslint eslint-plugin-svelte prettier prettier-plugin-svelte`
+- [ ] Create `eslint.config.js` with TypeScript + Svelte rules
+- [ ] Create `.prettierrc` with project preferences
+- [ ] Add npm scripts: `lint`, `lint:fix`, `format`, `format:check`
+- [ ] Run initial format pass on all files
+- [ ] Add lint check to CI (if/when CI exists)
+
+---
+
+### Workstream F: Health Check Endpoint ✅
+
+**Branch:** `workstream/f-health-check`  
+**Status:** Merged to main  
+**Risk:** Very Low - new route only  
+**Shared files:** None  
+**Depends on:** Nothing
+
+- [x] Create `src/routes/health/+server.ts` endpoint
+- [x] Check database connectivity
+- [x] Return JSON `{ status: 'ok', timestamp, version }`
+- [x] Return 503 if database unreachable
+- [x] Test with `curl http://localhost:5174/health`
+
+---
+
+### Workstream G: Structured Logging
+
+**Branch:** `workstream/g-structured-logging`  
+**Risk:** Low - replaces console.log calls  
+**Shared files:** `src/lib/server/logger.ts` (complete rewrite), many files (console.log → logger)  
+**Depends on:** Nothing  
+**Note:** Coordinate with Workstream B if both modify similar files
+
+- [ ] Rewrite `src/lib/server/logger.ts` for structured JSON output
+- [ ] Add log levels (debug, info, warn, error)
+- [ ] Add `LOG_LEVEL` env var support
+- [ ] Add request context (timestamp, correlation ID)
+- [ ] Update all existing `console.log` calls to use logger
+
+---
+
+## Phase 2B: Security Layer (After Phase 2A OR Parallel)
+
+**Prerequisites:** Phase 2A recommended but not required  
+**Can run in parallel:** Workstreams B, C within this phase  
+**Merge order:** C (headers) before B (auth) recommended
+
+### Workstream C: Security Headers & CSP
+
+**Branch:** `workstream/c-security-headers`  
+**Risk:** Medium - CSP can break inline scripts  
+**Shared files:** `src/hooks.server.ts` (creates or modifies)  
+**Depends on:** Nothing  
+**Note:** Test admin forms thoroughly after implementing CSP
+
+- [ ] Create `src/hooks.server.ts` CSP middleware
+- [ ] Add Content-Security-Policy header
+- [ ] Add X-Frame-Options header
+- [ ] Add X-Content-Type-Options header
+- [ ] Test that admin form submissions still work with CSP
+
+**Future work discovered:**
+- [ ] Move any inline event handlers to external scripts if CSP blocks them
+
+---
+
+### Workstream B: Production Admin Auth
+
+**Important:** These changes apply to PRODUCTION ONLY. Local development (`npm run dev`) must remain unauthenticated for Blaine's convenience.
+
+**Branch:** `workstream/b-admin-auth`  
+**Risk:** High - affects all admin routes  
+**Shared files:** `src/routes/admin/+layout.server.ts` (modifies), creates new routes  
+**Depends on:** Workstream C recommended (CSP headers in place first)
+
+- [ ] Add `ADMIN_PASSWORD` and `SESSION_SECRET` to `.env.example` (no default values)
+- [ ] Create `src/routes/admin/login/+page.svelte` - login form for production
+- [ ] Create `src/routes/admin/login/+page.server.ts` - validate password, set session cookie
+- [ ] Modify `src/routes/admin/+layout.server.ts` - check session in production only
+  - Must check `process.env.NODE_ENV === 'production'`
+  - In dev mode, skip auth entirely
+  - In production, redirect to `/admin/login` if no valid session
+- [ ] Add logout button in admin layout
+
+**Future work discovered:**
+- [ ] Consider rate limiting on login attempts
+
+---
+
+## Phase 2C: Performance (After Phase 2A)
+
+**Prerequisites:** Phase 2A complete (stable foundation)  
+**Can run in parallel:** Workstreams D, E, I  
+**Merge order:** D (pooling) before J (timestamps) if both touch adapter
+
+### Workstream D: MySQL Connection Pooling
+
+**Branch:** `workstream/d-connection-pooling`  
+**Risk:** Medium - changes core database behavior  
+**Shared files:** `src/lib/server/persistence/mysql-adapter.ts` (major changes)  
+**Depends on:** Nothing
+
+- [ ] Modify `src/lib/server/persistence/mysql-adapter.ts`
+- [ ] Switch from `createConnection()` to `createPool()`
+- [ ] Configure pool settings (connectionLimit: 10, timeouts)
+- [ ] Test with `npm run dev:db` - verify connections are reused
+- [ ] Add pool end() cleanup on server shutdown
+
+---
+
+### Workstream E: Caching Layer
+
+**Branch:** `workstream/e-caching-layer`  
+**Risk:** Medium - can cause stale data if invalidation fails  
+**Shared files:** `src/lib/server/cache.ts` (new), persistence files (add cache calls)  
+**Depends on:** Nothing  
+**Note:** Coordinate with Workstream J if both modify adapters
+
+- [ ] Install `npm install node-cache`
+- [ ] Create `src/lib/server/cache.ts` with Cache wrapper
+- [ ] Cache `getAllPosts()` results with 5-minute TTL
+- [ ] Cache `getAllStories()` results with 5-minute TTL
+- [ ] Cache `getCategories()` results with 5-minute TTL
+- [ ] Add cache invalidation on create/update/delete operations
+- [ ] Add `CACHE_TTL` env var for configuration
+
+---
+
+### Workstream I: Expand Test Coverage
+
+**Branch:** `workstream/i-test-coverage`  
+**Risk:** Low - only adds tests  
+**Shared files:** `tests/` directory  
+**Depends on:** Nothing, but ideally after Workstream A (validation) to test those schemas
+
+- [ ] Install coverage: `npm install -D @vitest/coverage-v8`
+- [ ] Add `test:coverage` script to package.json
+- [ ] Create `tests/unit/persistence.spec.ts` - test FileAdapter CRUD
+- [ ] Create `tests/unit/validation.spec.ts` - test Zod schemas (if A done)
+- [ ] Create `tests/unit/date.spec.ts` - test date utilities
+- [ ] Create `tests/e2e/admin.spec.ts` - create post flow
+- [ ] Create `tests/e2e/navigation.spec.ts` - homepage, theme toggle
+- [ ] Create `tests/e2e/search.spec.ts` - search functionality
+- [ ] Run full test suite and ensure all pass
+
+---
+
+## Phase 2D: Database Schema (After Phase 2C or Parallel)
+
+**Prerequisites:** None, but D (pooling) recommended first  
+**Merge order:** D before J if coordinating
+
+### Workstream J: Timestamps & Indexes
+
+**Branch:** `workstream/j-timestamps-indexes`  
+**Risk:** Medium - requires migration on production  
+**Shared files:** `src/lib/server/persistence/schema.ts`, adapters  
+**Depends on:** Nothing
+
+- [ ] Modify `src/lib/server/persistence/schema.ts`
+- [ ] Add `created_at` timestamp to all tables
+- [ ] Add `updated_at` timestamp to all tables
+- [ ] Add database indexes:
+  - `idx_posts_date` on `contours_posts.date`
+  - `idx_posts_slug` on `contours_posts.slug`
+  - `idx_categories_name` on `contours_categories.name`
+- [ ] Generate migration: `npm run db:generate`
+- [ ] Test migration locally with `npm run db:migrate`
+- [ ] Update adapters to set timestamps on create/update
+
+**Production deployment note:** This requires running `npm run db:migrate` on Railway
+
+---
+
+### Workstream K: Image Optimization
+
+**Branch:** `workstream/k-image-optimization`  
+**Risk:** Low-Medium - adds image processing dependency  
+**Shared files:** `src/routes/images/[filename]/+server.ts`  
+**Depends on:** Nothing
+
+- [ ] Install `npm install sharp`
+- [ ] Modify `src/routes/images/[filename]/+server.ts`
+- [ ] Add query param support: `?w=800` for width
+- [ ] Generate WebP versions on-the-fly
+- [ ] Add cache headers for images (1 day)
+- [ ] Limit max dimensions to prevent abuse
+- [ ] Test with existing images in posts
+
+---
+
+## Phase 3: Shared DB Foundation (Documentation)
+
+**This is research/documentation - does NOT block coding workstreams**
+
+### V1 M3 - Shared DB Foundation (Crosscutting)
+
+Contours deploys first but sets patterns for track-workout and medbridge.
+This milestone is about documenting and validating the shared approach — not building other apps.
+
+**Note:** This milestone can be worked on in parallel with all V2 workstreams. It doesn't produce code changes to Contours, only documentation.
+
+- [ ] Document shared DB conventions in `~/Athenia/projects/CLAUDE.md` or a shared doc:
+  - Table prefix per project (`contours_`, `tw_`, `mb_`)
+  - snake_case table/column names
+  - Common timestamp columns (`created_at`, `updated_at`)
+  - Drizzle as standard ORM for Node projects
+- [ ] Validate that track-workout and medbridge schemas can coexist in the same MySQL instance
+- [ ] Document Railway MySQL provisioning steps (one instance, multiple logical schemas or prefixed tables)
+- [ ] Create a shared connection-config pattern (env vars, connection pooling) reusable across projects
+
+---
+
+## Production Deployment Checklist
+
+Before deploying any V2 changes to Railway:
+
+- [ ] Rotate `RAILWAY_DB_URL` credentials (remove from git history)
+- [ ] Set `ADMIN_PASSWORD` in Railway environment
+- [ ] Set `SESSION_SECRET` in Railway environment (random 32+ chars)
+- [ ] Set `LOG_LEVEL=info` in Railway environment
+- [ ] Run `npm run db:migrate` against production DB
+- [ ] Run smoke tests on all routes
+- [ ] Verify admin login works in production
+- [ ] Check logs are outputting JSON
+
+---
+
 ## Future: Beads (V3+)
 
 Beads integration for project memory / issue tracking. Blocked on 401 auth issue with beads CLI. Deferred until upstream resolves.
@@ -140,4 +394,4 @@ Beads integration for project memory / issue tracking. Blocked on 401 auth issue
 See `docs/implementation-plan.md` Workstream 2 for original design.
 
 ---
-*Last updated: 2026-02-27*
+*Last updated: 2026-03-06*
