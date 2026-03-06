@@ -1,10 +1,28 @@
 import type { Handle, HandleServerError } from '@sveltejs/kit';
 import { initAdapter } from '$lib/server/persistence';
 import { logger } from '$lib/server/logger';
+import { cleanupMySQLPool } from '$lib/server/persistence/mysql-adapter.js';
 
 // Initialize the persistence adapter at server startup.
 const _adapter = await initAdapter();
 logger.info('persistence adapter initialized', { mode: process.env.PERSISTENCE || 'file' });
+
+// Register shutdown handlers for graceful pool cleanup
+async function handleShutdown(signal: string): Promise<void> {
+	logger.info(`received ${signal}, cleaning up MySQL pool...`);
+	try {
+		await cleanupMySQLPool();
+		logger.info('MySQL pool cleaned up successfully');
+	} catch (error) {
+		logger.error('error during MySQL pool cleanup', { 
+			error: error instanceof Error ? error.message : String(error) 
+		});
+	}
+	process.exit(0);
+}
+
+process.on('SIGTERM', () => handleShutdown('SIGTERM'));
+process.on('SIGINT', () => handleShutdown('SIGINT')); // Handle Ctrl+C
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { method, url } = event.request;
