@@ -60,7 +60,6 @@ function addSecurityHeaders(response: Response): void {
 	}
 	response.headers.set('Content-Security-Policy', buildCSP());
 }
-
 export const handle: Handle = async ({ event, resolve }) => {
 	const { method, url } = event.request;
 	const path = new URL(url).pathname;

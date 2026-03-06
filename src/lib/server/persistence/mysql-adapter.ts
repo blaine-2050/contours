@@ -155,6 +155,9 @@ export class MysqlAdapter implements PersistenceAdapter {
 			);
 		}
 
+		// Invalidate posts cache
+		deleteCache(CACHE_KEYS.POSTS_ALL);
+
 		return slug;
 	}
 
@@ -223,12 +226,23 @@ export class MysqlAdapter implements PersistenceAdapter {
 		}
 
 		await this.db.insert(contoursCategories).values({ id, name });
+
+		// Invalidate categories cache
+		deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+
 		return { id, name };
 	}
 
 	async removeCategory(id: string): Promise<boolean> {
 		const result = await this.db.delete(contoursCategories).where(eq(contoursCategories.id, id));
-		return (result[0] as unknown as { affectedRows: number }).affectedRows > 0;
+		const success = (result[0] as unknown as { affectedRows: number }).affectedRows > 0;
+
+		if (success) {
+			// Invalidate categories cache
+			deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+		}
+
+		return success;
 	}
 
 	// --- Stories ---
@@ -288,6 +302,9 @@ export class MysqlAdapter implements PersistenceAdapter {
 			content: data.content,
 			contentHash: hash,
 		});
+
+		// Invalidate stories cache
+		deleteCache(CACHE_KEYS.STORIES_ALL);
 
 		return slug;
 	}
