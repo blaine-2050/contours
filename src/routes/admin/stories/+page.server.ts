@@ -1,30 +1,33 @@
 import { getAdapter } from '$lib/server/persistence';
-import { redirect } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
+import { validateStory } from '$lib/validation/story';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
-		const title = formData.get('title') as string;
-		const date = formData.get('date') as string;
-		const time = formData.get('time') as string | null;
-		const content = formData.get('content') as string;
-		const author = (formData.get('author') as string) || 'Blaine';
-		const summary = formData.get('summary') as string | null;
 
-		if (!title || !date || !content) {
-			return { error: 'Title, date, and content are required' };
+		// Validate form data using Zod schema
+		const validation = validateStory(formData);
+		if (!validation.success) {
+			return fail(400, {
+				error: 'Please fix the validation errors below',
+				errors: validation.errors,
+				data: Object.fromEntries(formData),
+			});
 		}
 
+		const data = validation.data;
+
 		const slug = await getAdapter().createStory({
-			title,
-			date,
-			time: time || undefined,
-			content,
-			author,
-			summary: summary || undefined
+			title: data.title,
+			date: data.date,
+			time: data.time,
+			content: data.content,
+			author: data.author,
+			summary: data.summary,
 		});
 
 		throw redirect(303, `/stories/${slug}`);
-	}
+	},
 };

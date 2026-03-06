@@ -138,13 +138,13 @@ Improve visual hierarchy and readability of post content.
 **Shared files:** `+page.server.ts` files (add validation calls)  
 **Depends on:** Nothing
 
-- [ ] Install Zod: `npm install zod`
-- [ ] Create `src/lib/validation/post.ts` with post schema
-- [ ] Create `src/lib/validation/story.ts` with story schema
-- [ ] Add validation to `/admin/create/+page.server.ts` `actions.create`
-- [ ] Add validation to `/admin/stories/+page.server.ts` `actions.create`
-- [ ] Add validation to `/admin/categories/+page.server.ts` `actions.add`
-- [ ] Return validation errors to forms with user-friendly messages
+- [x] Install Zod: `npm install zod`
+- [x] Create `src/lib/validation/post.ts` with post schema
+- [x] Create `src/lib/validation/story.ts` with story schema
+- [x] Add validation to `/admin/create/+page.server.ts` `actions.create`
+- [x] Add validation to `/admin/stories/+page.server.ts` `actions.create`
+- [x] Add validation to `/admin/categories/+page.server.ts` `actions.add`
+- [x] Return validation errors to forms with user-friendly messages
 
 **Future work discovered:**
 - [ ] Add client-side validation for better UX (optional)

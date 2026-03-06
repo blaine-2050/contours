@@ -1,5 +1,6 @@
 import { getAdapter } from '$lib/server/persistence';
-import { redirect } from '@sveltejs/kit';
+import { redirect, fail } from '@sveltejs/kit';
+import { validatePost } from '$lib/validation/post';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -10,20 +11,22 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
-		const title = formData.get('title') as string;
-		const date = formData.get('date') as string;
-		const time = formData.get('time') as string | null;
-		const content = formData.get('content') as string;
-		const author = (formData.get('author') as string) || 'Blaine';
-		const categories = formData.getAll('categories') as string[];
 		const imageFile = formData.get('image') as File | null;
 
-		if (!title || !date || !content) {
-			return { error: 'Title, date, and content are required' };
+		// Validate form data using Zod schema
+		const validation = validatePost(formData);
+		if (!validation.success) {
+			return fail(400, {
+				error: 'Please fix the validation errors below',
+				errors: validation.errors,
+				data: Object.fromEntries(formData),
+			});
 		}
 
+		const data = validation.data;
+
 		// Generate slug first for image naming
-		const slug = title
+		const slug = data.title
 			.toLowerCase()
 			.replace(/[^a-z0-9]+/g, '-')
 			.replace(/(^-|-$)/g, '');
@@ -37,14 +40,14 @@ export const actions: Actions = {
 		}
 
 		await adapter.createPost({
-			title,
-			date,
-			time: time || undefined,
-			content,
-			author,
-			categories,
-			image: imageName
+			title: data.title,
+			date: data.date,
+			time: data.time,
+			content: data.content,
+			author: data.author,
+			categories: data.categories,
+			image: imageName,
 		});
 		throw redirect(303, `/posts/${slug}`);
-	}
+	},
 };
