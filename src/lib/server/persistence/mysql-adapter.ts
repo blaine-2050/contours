@@ -2,6 +2,7 @@ import { createHash } from 'crypto';
 import { drizzle } from 'drizzle-orm/mysql2';
 import mysql from 'mysql2/promise';
 import { eq, desc, sql } from 'drizzle-orm';
+import { getCached, deleteCache, CACHE_KEYS } from '../cache.js';
 import {
 	contoursPosts,
 	contoursPostCategories,
@@ -37,29 +38,31 @@ export class MysqlAdapter implements PersistenceAdapter {
 	// --- Posts ---
 
 	async getAllPosts(): Promise<PostMeta[]> {
-		const rows = await this.db
-			.select()
-			.from(contoursPosts)
-			.orderBy(desc(contoursPosts.date), desc(contoursPosts.time));
-
-		const posts: PostMeta[] = [];
-		for (const row of rows) {
-			const cats = await this.db
+		return getCached(CACHE_KEYS.POSTS_ALL, async () => {
+			const rows = await this.db
 				.select()
-				.from(contoursPostCategories)
-				.where(eq(contoursPostCategories.postSlug, row.slug));
+				.from(contoursPosts)
+				.orderBy(desc(contoursPosts.date), desc(contoursPosts.time));
 
-			posts.push({
-				slug: row.slug,
-				title: row.title,
-				date: row.date,
-				time: row.time ?? undefined,
-				author: row.author,
-				categories: cats.map((c) => c.categoryId),
-				image: row.image ?? undefined,
-			});
-		}
-		return posts;
+			const posts: PostMeta[] = [];
+			for (const row of rows) {
+				const cats = await this.db
+					.select()
+					.from(contoursPostCategories)
+					.where(eq(contoursPostCategories.postSlug, row.slug));
+
+				posts.push({
+					slug: row.slug,
+					title: row.title,
+					date: row.date,
+					time: row.time ?? undefined,
+					author: row.author,
+					categories: cats.map((c) => c.categoryId),
+					image: row.image ?? undefined,
+				});
+			}
+			return posts;
+		});
 	}
 
 	async getPostsByCategory(categoryId: string): Promise<PostMeta[]> {
@@ -122,6 +125,9 @@ export class MysqlAdapter implements PersistenceAdapter {
 			);
 		}
 
+		// Invalidate posts cache
+		deleteCache(CACHE_KEYS.POSTS_ALL);
+
 		return slug;
 	}
 
@@ -169,8 +175,10 @@ export class MysqlAdapter implements PersistenceAdapter {
 	// --- Categories ---
 
 	async getCategories(): Promise<Category[]> {
-		const rows = await this.db.select().from(contoursCategories);
-		return rows.map((r) => ({ id: r.id, name: r.name }));
+		return getCached(CACHE_KEYS.CATEGORIES_ALL, async () => {
+			const rows = await this.db.select().from(contoursCategories);
+			return rows.map((r) => ({ id: r.id, name: r.name }));
+		});
 	}
 
 	async addCategory(name: string): Promise<Category> {
@@ -190,30 +198,43 @@ export class MysqlAdapter implements PersistenceAdapter {
 		}
 
 		await this.db.insert(contoursCategories).values({ id, name });
+
+		// Invalidate categories cache
+		deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+
 		return { id, name };
 	}
 
 	async removeCategory(id: string): Promise<boolean> {
 		const result = await this.db.delete(contoursCategories).where(eq(contoursCategories.id, id));
-		return (result[0] as unknown as { affectedRows: number }).affectedRows > 0;
+		const success = (result[0] as unknown as { affectedRows: number }).affectedRows > 0;
+
+		if (success) {
+			// Invalidate categories cache
+			deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+		}
+
+		return success;
 	}
 
 	// --- Stories ---
 
 	async getAllStories(): Promise<StoryMeta[]> {
-		const rows = await this.db
-			.select()
-			.from(contoursStories)
-			.orderBy(desc(contoursStories.date), desc(contoursStories.time));
+		return getCached(CACHE_KEYS.STORIES_ALL, async () => {
+			const rows = await this.db
+				.select()
+				.from(contoursStories)
+				.orderBy(desc(contoursStories.date), desc(contoursStories.time));
 
-		return rows.map((r) => ({
-			slug: r.slug,
-			title: r.title,
-			date: r.date,
-			time: r.time ?? undefined,
-			author: r.author,
-			summary: r.summary ?? undefined,
-		}));
+			return rows.map((r) => ({
+				slug: r.slug,
+				title: r.title,
+				date: r.date,
+				time: r.time ?? undefined,
+				author: r.author,
+				summary: r.summary ?? undefined,
+			}));
+		});
 	}
 
 	async getStoryBySlug(slug: string): Promise<Story | null> {
@@ -255,6 +276,9 @@ export class MysqlAdapter implements PersistenceAdapter {
 			content: data.content,
 			contentHash: hash,
 		});
+
+		// Invalidate stories cache
+		deleteCache(CACHE_KEYS.STORIES_ALL);
 
 		return slug;
 	}
