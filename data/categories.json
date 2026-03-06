@@ -14,5 +14,25 @@
   {
     "id": "climate",
     "name": "Climate"
+  },
+  {
+    "id": "test-category",
+    "name": "Test Category"
+  },
+  {
+    "id": "duplicate-category",
+    "name": "Duplicate Category"
+  },
+  {
+    "id": "technology",
+    "name": "Technology"
+  },
+  {
+    "id": "test-category-unit",
+    "name": "Test Category Unit"
+  },
+  {
+    "id": "duplicate-category-unit",
+    "name": "Duplicate Category Unit"
   }
 ]

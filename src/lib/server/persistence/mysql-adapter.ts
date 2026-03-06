@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
+import * as mysql from 'mysql2/promise';
 import { eq, desc, sql } from 'drizzle-orm';
 import {
 	contoursPosts,
@@ -25,12 +25,45 @@ const mimeTypes: Record<string, string> = {
 	'.svg': 'image/svg+xml',
 };
 
+// Pool configuration for connection pooling
+const POOL_CONFIG = {
+	connectionLimit: 10,
+	acquireTimeout: 60000,
+	timeout: 60000,
+	queueLimit: 0, // unlimited queue
+};
+
+// Global pool instance for cleanup
+let globalPool: mysql.Pool | null = null;
+
+/**
+ * Cleanup function to end the MySQL pool.
+ * Should be called on server shutdown to gracefully close connections.
+ */
+export async function cleanupMySQLPool(): Promise<void> {
+	if (globalPool) {
+		await globalPool.end();
+		globalPool = null;
+	}
+}
+
+/**
+ * Get the current pool instance (for health checks, etc.)
+ */
+export function getMySQLPool(): mysql.Pool | null {
+	return globalPool;
+}
+
 export class MysqlAdapter implements PersistenceAdapter {
 	private db;
-	private pool;
+	private pool: mysql.Pool;
 
 	constructor(databaseUrl: string) {
-		this.pool = mysql.createPool(databaseUrl);
+		this.pool = mysql.createPool({
+			uri: databaseUrl,
+			...POOL_CONFIG,
+		});
+		globalPool = this.pool;
 		this.db = drizzle(this.pool);
 	}
 
