@@ -1,0 +1,41 @@
+# Workstream G: Structured Logging
+# Branch: workstream/g-structured-logging
+# Started: 2026-03-06T14:14:00+08:00
+# Completed: 2026-03-06T14:30:00+08:00
+
+[2026-03-06T14:14:00+08:00] Starting Workstream G: Structured Logging
+[2026-03-06T14:14:00+08:00] Reading current logger.ts and project structure
+[2026-03-06T14:14:05+08:00] Rewrote logger.ts with AsyncLocalStorage for correlation ID support
+[2026-03-06T14:14:10+08:00] Updated hooks.server.ts to wrap requests in logger.withContext
+[2026-03-06T14:14:15+08:00] Verified LOG_LEVEL already exists in .env.example
+[2026-03-06T14:14:20+08:00] Verified no console.log/console.error calls exist outside logger.ts
+[2026-03-06T14:14:30+08:00] Running build...
+[2026-03-06T14:15:00+08:00] Build: SUCCESS
+[2026-03-06T14:15:05+08:00] Type check: SUCCESS (0 errors, 1 warning unrelated to changes)
+[2026-03-06T14:15:10+08:00] Tests: SUCCESS (4 passed)
+[2026-03-06T14:30:00+08:00] Workstream G implementation complete
+
+## Summary of Changes
+
+### src/lib/server/logger.ts
+- Added AsyncLocalStorage for request context propagation
+- Added correlation ID generation and tracking
+- Structured JSON output: {timestamp, level, msg, correlationId, ...meta}
+- Log levels: debug, info, warn, error
+- LOG_LEVEL env var support
+- Added logger.withContext() for wrapping functions with context
+- Added logger.getContext() for accessing current context
+- Added logger.getLevel() for checking current log level
+
+### src/hooks.server.ts
+- Updated handle to wrap requests in logger.withContext()
+- Requests now automatically get correlationId, method, path in context
+- Updated handleError to use structured logger.error()
+
+### .env.example
+- LOG_LEVEL already present (no changes needed)
+
+## Testing
+- All 4 unit tests pass
+- Build completes successfully
+- Type check passes with 0 errors

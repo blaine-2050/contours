@@ -184,7 +184,7 @@ Improve visual hierarchy and readability of post content.
 
 ---
 
-### Workstream G: Structured Logging
+### Workstream G: Structured Logging ✅
 
 **Branch:** `workstream/g-structured-logging`  
 **Risk:** Low - replaces console.log calls  
@@ -192,11 +192,11 @@ Improve visual hierarchy and readability of post content.
 **Depends on:** Nothing  
 **Note:** Coordinate with Workstream B if both modify similar files
 
-- [ ] Rewrite `src/lib/server/logger.ts` for structured JSON output
-- [ ] Add log levels (debug, info, warn, error)
-- [ ] Add `LOG_LEVEL` env var support
-- [ ] Add request context (timestamp, correlation ID)
-- [ ] Update all existing `console.log` calls to use logger
+- [x] Rewrite `src/lib/server/logger.ts` for structured JSON output
+- [x] Add log levels (debug, info, warn, error)
+- [x] Add `LOG_LEVEL` env var support
+- [x] Add request context (timestamp, correlation ID)
+- [x] Update all existing `console.log` calls to use logger
 
 ---
 
