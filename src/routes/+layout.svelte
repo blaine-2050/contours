@@ -61,8 +61,9 @@
 
 <style>
 	:global(:root) {
-		--font-body: 'Lora', Georgia, 'Times New Roman', serif;
-		--font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		--font-heading: 'Merriweather', Georgia, serif;
+		--font-body: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		--font-ui: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		--bg: #faf8f5;
 		--bg-surface: #f3efe9;
 		--text: #2d2926;
@@ -91,9 +92,7 @@
 		line-height: 1.7;
 		background: var(--bg);
 		color: var(--text);
-		transition:
-			background 0.2s,
-			color 0.2s;
+		transition: background 0.2s, color 0.2s;
 	}
 
 	:global(a) {
@@ -112,34 +111,75 @@
 		text-decoration-color: var(--link-hover);
 	}
 
+	/* Heading styles with Merriweather font */
 	:global(h1, h2, h3, h4, h5, h6) {
-		font-family: var(--font-ui);
-		line-height: 1.3;
+		font-family: var(--font-heading);
 		color: var(--text);
+		margin-top: 1.5em;
+		margin-bottom: 0.75em;
 	}
 
 	:global(h1) {
-		font-size: 2rem;
+		font-size: 2.5rem;
 		font-weight: 700;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+		margin-top: 0;
 	}
 
 	:global(h2) {
-		font-size: 1.5rem;
-		font-weight: 600;
+		font-size: 1.75rem;
+		font-weight: 700;
+		line-height: 1.25;
+		letter-spacing: -0.01em;
 	}
 
 	:global(h3) {
 		font-size: 1.25rem;
-		font-weight: 600;
+		font-weight: 400;
+		line-height: 1.3;
 	}
 
+	:global(h4) {
+		font-size: 1.125rem;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+
+	:global(h5, h6) {
+		font-size: 1rem;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+
+	/* Indented content sizing - drops one level from parent heading */
+	:global(.indented-content) {
+		margin-left: 1.5rem;
+		padding-left: 1rem;
+		border-left: 2px solid var(--border);
+	}
+
+	:global(.indented-content p) {
+		font-size: 1.25rem;
+		line-height: 1.6;
+	}
+
+	/* Blockquote styling - enhanced with more indentation */
 	:global(blockquote) {
 		border-left: 3px solid var(--link);
 		background: var(--accent-bg);
 		margin: 1.5rem 0;
-		padding: 0.75rem 1rem;
+		padding: 1rem 1.5rem;
 		font-style: italic;
 		border-radius: 0 8px 8px 0;
+	}
+
+	:global(blockquote p:first-child) {
+		margin-top: 0;
+	}
+
+	:global(blockquote p:last-child) {
+		margin-bottom: 0;
 	}
 
 	:global(pre) {
@@ -181,7 +221,7 @@
 	}
 
 	.site-title {
-		font-family: var(--font-ui);
+		font-family: var(--font-heading);
 		font-size: 1.25rem;
 		font-weight: 700;
 		text-decoration: none;
@@ -202,7 +242,7 @@
 	.nav-right a {
 		font-family: var(--font-ui);
 		font-size: 0.875rem;
-		font-weight: 500;
+		font-weight: 600;
 		color: var(--text-muted);
 		text-decoration: none;
 		transition: color 0.15s;

@@ -1,0 +1,49 @@
+# Workstream M1: Typography & Styling - Activity Log
+
+## 2026-03-06 12:30 UTC - Started Workstream M1
+
+**Agent:** Kimi  
+**Status:** [IN PROGRESS]  
+**Phase:** 2A  
+
+### Tasks Planned:
+1. Add Google Fonts to src/app.html (Merriweather + Source Sans Pro)
+2. Update CSS variables in src/routes/+layout.svelte
+3. Style headings (H1, H2, H3 with Merriweather)
+4. Implement indent sizing for indented paragraphs
+5. Enhance blockquote styling
+
+---
+
+## 2026-03-06 12:40 UTC - Implementation Complete
+
+**Agent:** Kimi  
+**Status:** [DONE]  
+
+### Changes Made:
+
+1. **src/app.html** - Updated Google Fonts:
+   - Removed: Inter + Lora fonts
+   - Added: Merriweather (400, 700) + Source Sans Pro (400, 600)
+
+2. **src/routes/+layout.svelte** - Typography system:
+   - `--font-heading`: 'Merriweather', Georgia, serif
+   - `--font-body`: 'Source Sans Pro', -apple-system, sans-serif
+   - `--font-ui`: 'Source Sans Pro', -apple-system, sans-serif
+
+3. **Heading Styles (Merriweather)**:
+   - H1: 2.5rem, weight 700, letter-spacing -0.02em
+   - H2: 1.75rem, weight 700, letter-spacing -0.01em
+   - H3: 1.25rem, weight 400
+
+4. **Indented Content (.indented-content)**:
+   - margin-left: 1.5rem, padding-left: 1rem
+   - Paragraphs use H3-level size (1.25rem)
+
+5. **Blockquotes**:
+   - Increased padding: 1rem 1.5rem
+   - Added first/last-child margin fixes
+
+### Test Results:
+- ✅ Unit tests: 4 passed
+- ✅ Build: Successful
