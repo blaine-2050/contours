@@ -1,0 +1,39 @@
+# Workstream K: Image Optimization
+
+**Agent:** Kimi  
+**Started:** 2026-03-06  
+**Branch:** workstream/k-image-optimization
+
+---
+
+## Activity Log
+
+### 2026-03-06 12:30 UTC - Started Workstream K
+- Created branch from main
+- Updated .agent-status.md to mark K as [IN PROGRESS]
+- Installing Sharp dependency
+
+### Tasks
+- [x] Install Sharp: `npm install sharp`
+- [x] Modify `src/routes/images/[filename]/+server.ts`
+  - [x] Add query param support: `?w=800` for width
+  - [x] Use Sharp to resize images on-the-fly
+  - [x] Generate WebP versions when requested (auto-detect via Accept header or `?format=webp`)
+  - [x] Add cache headers for images (1 day)
+  - [x] Limit max dimensions to prevent abuse (max 2000px)
+  - [x] Handle errors gracefully (return original if processing fails)
+- [x] Test with existing images in posts
+- [x] Update todo.md to mark K tasks as [x]
+- [x] Update .agent-status.md: change K to [DONE]
+- [x] Commit with message following CONTRIBUTING.md convention
+
+### Testing Results
+Sharp processing verified with test image (computer-use.png):
+- Original: 442KB
+- Resized (w=400): 159KB (64% reduction)
+- WebP format: 30KB (93% reduction)
+- Resized + WebP: 12KB (97% reduction)
+
+Type check: 0 errors ✅
+Unit tests: 75 passing ✅
+
