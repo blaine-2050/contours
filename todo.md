@@ -297,15 +297,15 @@ Improve visual hierarchy and readability of post content.
 **Shared files:** `tests/` directory  
 **Depends on:** Nothing, but ideally after Workstream A (validation) to test those schemas
 
-- [ ] Install coverage: `npm install -D @vitest/coverage-v8`
-- [ ] Add `test:coverage` script to package.json
-- [ ] Create `tests/unit/persistence.spec.ts` - test FileAdapter CRUD
-- [ ] Create `tests/unit/validation.spec.ts` - test Zod schemas (if A done)
-- [ ] Create `tests/unit/date.spec.ts` - test date utilities
-- [ ] Create `tests/e2e/admin.spec.ts` - create post flow
-- [ ] Create `tests/e2e/navigation.spec.ts` - homepage, theme toggle
-- [ ] Create `tests/e2e/search.spec.ts` - search functionality
-- [ ] Run full test suite and ensure all pass
+- [x] Install coverage: `npm install -D @vitest/coverage-v8`
+- [x] Add `test:coverage` script to package.json
+- [x] Create `tests/unit/persistence.spec.ts` - test FileAdapter CRUD
+- [x] Create `tests/unit/validation.spec.ts` - test Zod schemas (if A done)
+- [x] Create `tests/unit/date.spec.ts` - test date utilities
+- [x] Create `tests/e2e/admin.spec.ts` - create post flow
+- [x] Create `tests/e2e/navigation.spec.ts` - homepage, theme toggle
+- [x] Create `tests/e2e/search.spec.ts` - search functionality
+- [x] Run full test suite and ensure all pass
 
 ---
 
