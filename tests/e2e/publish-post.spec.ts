@@ -13,7 +13,10 @@ test.describe('Post Publication', () => {
 		// Fill the form
 		await page.fill('[name="title"]', 'Hello World Test');
 		await page.fill('[name="date"]', '2026-01-08');
-		await page.fill('[name="content"]', '# Hello World\n\nThis is a test post created by the E2E test.');
+		await page.fill(
+			'[name="content"]',
+			'# Hello World\n\nThis is a test post created by the E2E test.'
+		);
 
 		// Submit the form
 		await page.click('button[type="submit"]');

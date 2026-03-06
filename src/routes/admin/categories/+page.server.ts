@@ -29,5 +29,5 @@ export const actions: Actions = {
 
 		await getAdapter().removeCategory(id);
 		return { success: true };
-	}
+	},
 };

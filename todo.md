@@ -159,11 +159,11 @@ Improve visual hierarchy and readability of post content.
 **Depends on:** Nothing  
 **Note:** Run this early - other branches can rebase on it to get formatting
 
-- [ ] Install dev dependencies: `npm install -D eslint @eslint/js typescript-eslint eslint-plugin-svelte prettier prettier-plugin-svelte`
-- [ ] Create `eslint.config.js` with TypeScript + Svelte rules
-- [ ] Create `.prettierrc` with project preferences
-- [ ] Add npm scripts: `lint`, `lint:fix`, `format`, `format:check`
-- [ ] Run initial format pass on all files
+- [x] Install dev dependencies: `npm install -D eslint @eslint/js typescript-eslint eslint-plugin-svelte prettier prettier-plugin-svelte`
+- [x] Create `eslint.config.js` with TypeScript + Svelte rules
+- [x] Create `.prettierrc` with project preferences
+- [x] Add npm scripts: `lint`, `lint:fix`, `format`, `format:check`
+- [x] Run initial format pass on all files
 - [ ] Add lint check to CI (if/when CI exists)
 
 ---

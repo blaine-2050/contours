@@ -7,7 +7,7 @@ import {
 	contoursPostCategories,
 	contoursCategories,
 	contoursStories,
-	contoursImages
+	contoursImages,
 } from './schema.js';
 import type { Post, PostMeta, Category, Story, StoryMeta, SearchResult } from './models.js';
 import type { PersistenceAdapter, CreatePostData, CreateStoryData, ImageData } from './types.js';
@@ -22,7 +22,7 @@ const mimeTypes: Record<string, string> = {
 	'.png': 'image/png',
 	'.gif': 'image/gif',
 	'.webp': 'image/webp',
-	'.svg': 'image/svg+xml'
+	'.svg': 'image/svg+xml',
 };
 
 export class MysqlAdapter implements PersistenceAdapter {
@@ -56,7 +56,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				time: row.time ?? undefined,
 				author: row.author,
 				categories: cats.map((c) => c.categoryId),
-				image: row.image ?? undefined
+				image: row.image ?? undefined,
 			});
 		}
 		return posts;
@@ -90,7 +90,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			author: row.author,
 			categories: cats.map((c) => c.categoryId),
 			image: row.image ?? undefined,
-			content: row.content
+			content: row.content,
 		};
 	}
 
@@ -110,14 +110,14 @@ export class MysqlAdapter implements PersistenceAdapter {
 			author: data.author || 'Blaine',
 			image: data.image ?? null,
 			content: data.content,
-			contentHash: hash
+			contentHash: hash,
 		});
 
 		if (data.categories && data.categories.length > 0) {
 			await this.db.insert(contoursPostCategories).values(
 				data.categories.map((catId) => ({
 					postSlug: slug,
-					categoryId: catId
+					categoryId: catId,
 				}))
 			);
 		}
@@ -138,7 +138,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 		await this.db.insert(contoursImages).values({
 			filename,
 			mimeType,
-			data: buffer
+			data: buffer,
 		});
 
 		return filename;
@@ -162,7 +162,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 
 		return {
 			data: Buffer.from(rows[0].data),
-			mimeType: rows[0].mimeType
+			mimeType: rows[0].mimeType,
 		};
 	}
 
@@ -194,9 +194,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 	}
 
 	async removeCategory(id: string): Promise<boolean> {
-		const result = await this.db
-			.delete(contoursCategories)
-			.where(eq(contoursCategories.id, id));
+		const result = await this.db.delete(contoursCategories).where(eq(contoursCategories.id, id));
 		return (result[0] as unknown as { affectedRows: number }).affectedRows > 0;
 	}
 
@@ -214,7 +212,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			date: r.date,
 			time: r.time ?? undefined,
 			author: r.author,
-			summary: r.summary ?? undefined
+			summary: r.summary ?? undefined,
 		}));
 	}
 
@@ -235,7 +233,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			time: row.time ?? undefined,
 			author: row.author,
 			summary: row.summary ?? undefined,
-			content: row.content
+			content: row.content,
 		};
 	}
 
@@ -255,7 +253,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			author: data.author || 'Blaine',
 			summary: data.summary ?? null,
 			content: data.content,
-			contentHash: hash
+			contentHash: hash,
 		});
 
 		return slug;
@@ -306,7 +304,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				author: row.author,
 				categories: cats.map((c) => c.categoryId),
 				image: row.image ?? undefined,
-				matchContext
+				matchContext,
 			});
 		}
 
@@ -333,7 +331,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				author: post.author,
 				image: post.image ?? null,
 				content: post.content,
-				contentHash: post.contentHash
+				contentHash: post.contentHash,
 			});
 
 			// Insert categories
@@ -341,7 +339,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				await this.db.insert(contoursPostCategories).values(
 					post.categories.map((catId) => ({
 						postSlug: post.slug,
-						categoryId: catId
+						categoryId: catId,
 					}))
 				);
 			}
@@ -363,7 +361,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				image: post.image ?? null,
 				content: post.content,
 				contentHash: post.contentHash,
-				updatedAt: sql`CURRENT_TIMESTAMP`
+				updatedAt: sql`CURRENT_TIMESTAMP`,
 			})
 			.where(eq(contoursPosts.slug, post.slug));
 
@@ -375,7 +373,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			await this.db.insert(contoursPostCategories).values(
 				post.categories.map((catId) => ({
 					postSlug: post.slug,
-					categoryId: catId
+					categoryId: catId,
 				}))
 			);
 		}
@@ -401,7 +399,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				author: story.author,
 				summary: story.summary ?? null,
 				content: story.content,
-				contentHash: story.contentHash
+				contentHash: story.contentHash,
 			});
 			return 'inserted';
 		}
@@ -420,7 +418,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				summary: story.summary ?? null,
 				content: story.content,
 				contentHash: story.contentHash,
-				updatedAt: sql`CURRENT_TIMESTAMP`
+				updatedAt: sql`CURRENT_TIMESTAMP`,
 			})
 			.where(eq(contoursStories.slug, story.slug));
 
@@ -437,7 +435,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 		if (existing.length === 0) {
 			await this.db.insert(contoursCategories).values({
 				id: category.id,
-				name: category.name
+				name: category.name,
 			});
 		}
 	}
@@ -447,7 +445,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 		await this.db.insert(contoursImages).values({
 			filename,
 			mimeType,
-			data
+			data,
 		});
 	}
 

@@ -7,6 +7,6 @@ export const load: PageServerLoad = async ({ url }) => {
 
 	return {
 		query,
-		results
+		results,
 	};
 };

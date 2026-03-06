@@ -47,7 +47,13 @@
 
 	<div class="field">
 		<label for="content">Content (Markdown/HTML)</label>
-		<textarea id="content" name="content" rows="20" required placeholder="Write your story here. You can link to posts using /posts/post-slug format."></textarea>
+		<textarea
+			id="content"
+			name="content"
+			rows="20"
+			required
+			placeholder="Write your story here. You can link to posts using /posts/post-slug format."
+		></textarea>
 	</div>
 
 	<button type="submit" class="btn-primary">Create Story</button>

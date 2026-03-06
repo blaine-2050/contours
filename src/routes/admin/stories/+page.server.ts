@@ -22,9 +22,9 @@ export const actions: Actions = {
 			time: time || undefined,
 			content,
 			author,
-			summary: summary || undefined
+			summary: summary || undefined,
 		});
 
 		throw redirect(303, `/stories/${slug}`);
-	}
+	},
 };

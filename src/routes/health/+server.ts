@@ -13,15 +13,15 @@ export const GET = async () => {
 		return json({
 			status: 'ok',
 			timestamp,
-			version: version || '0.0.1'
+			version: version || '0.0.1',
 		});
-	} catch (error) {
+	} catch (_error) {
 		return json(
 			{
 				status: 'error',
 				timestamp,
 				version: version || '0.0.1',
-				message: 'Database connectivity check failed'
+				message: 'Database connectivity check failed',
 			},
 			{ status: 503 }
 		);

@@ -5,14 +5,14 @@ import {
 	datetime,
 	uniqueIndex,
 	int,
-	customType
+	customType,
 } from 'drizzle-orm/mysql-core';
 import { sql } from 'drizzle-orm';
 
 const mediumblob = customType<{ data: Buffer; driverData: Buffer }>({
 	dataType() {
 		return 'mediumblob';
-	}
+	},
 });
 
 export const contoursPosts = mysqlTable('contours_posts', {
@@ -25,8 +25,12 @@ export const contoursPosts = mysqlTable('contours_posts', {
 	image: varchar('image', { length: 500 }),
 	content: text('content').notNull(),
 	contentHash: varchar('content_hash', { length: 64 }).notNull(), // SHA-256 hex
-	createdAt: datetime('created_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
-	updatedAt: datetime('updated_at').default(sql`CURRENT_TIMESTAMP`).notNull()
+	createdAt: datetime('created_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+	updatedAt: datetime('updated_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
 });
 
 export const contoursPostCategories = mysqlTable(
@@ -34,7 +38,7 @@ export const contoursPostCategories = mysqlTable(
 	{
 		id: int('id').primaryKey().autoincrement(),
 		postSlug: varchar('post_slug', { length: 255 }).notNull(),
-		categoryId: varchar('category_id', { length: 255 }).notNull()
+		categoryId: varchar('category_id', { length: 255 }).notNull(),
 	},
 	(table) => [uniqueIndex('post_category_unique').on(table.postSlug, table.categoryId)]
 );
@@ -42,7 +46,9 @@ export const contoursPostCategories = mysqlTable(
 export const contoursCategories = mysqlTable('contours_categories', {
 	id: varchar('id', { length: 255 }).primaryKey(),
 	name: varchar('name', { length: 500 }).notNull(),
-	createdAt: datetime('created_at').default(sql`CURRENT_TIMESTAMP`).notNull()
+	createdAt: datetime('created_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
 });
 
 export const contoursStories = mysqlTable('contours_stories', {
@@ -55,8 +61,12 @@ export const contoursStories = mysqlTable('contours_stories', {
 	summary: text('summary'),
 	content: text('content').notNull(),
 	contentHash: varchar('content_hash', { length: 64 }).notNull(),
-	createdAt: datetime('created_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
-	updatedAt: datetime('updated_at').default(sql`CURRENT_TIMESTAMP`).notNull()
+	createdAt: datetime('created_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+	updatedAt: datetime('updated_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
 });
 
 export const contoursImages = mysqlTable('contours_images', {
@@ -64,5 +74,7 @@ export const contoursImages = mysqlTable('contours_images', {
 	filename: varchar('filename', { length: 500 }).notNull().unique(),
 	mimeType: varchar('mime_type', { length: 100 }).notNull(),
 	data: mediumblob('data').notNull(),
-	createdAt: datetime('created_at').default(sql`CURRENT_TIMESTAMP`).notNull()
+	createdAt: datetime('created_at')
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
 });

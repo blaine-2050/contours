@@ -43,8 +43,8 @@ export const actions: Actions = {
 			content,
 			author,
 			categories,
-			image: imageName
+			image: imageName,
 		});
 		throw redirect(303, `/posts/${slug}`);
-	}
+	},
 };

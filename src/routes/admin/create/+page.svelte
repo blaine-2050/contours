@@ -6,7 +6,7 @@
 	const today = new Date().toISOString().split('T')[0];
 	const nowGMT = new Date().toISOString().split('T')[1].substring(0, 5);
 
-	let imageFile = $state<File | null>(null);
+	let _imageFile = $state<File | null>(null);
 	let imagePreview = $state<string | null>(null);
 	let isDragging = $state(false);
 	let fileInput: HTMLInputElement;
@@ -38,7 +38,7 @@
 	}
 
 	function setImage(file: File) {
-		imageFile = file;
+		_imageFile = file;
 		const reader = new FileReader();
 		reader.onload = (e) => {
 			imagePreview = e.target?.result as string;
@@ -47,7 +47,7 @@
 	}
 
 	function removeImage() {
-		imageFile = null;
+		_imageFile = null;
 		imagePreview = null;
 		if (fileInput) {
 			fileInput.value = '';
@@ -281,7 +281,9 @@
 		padding: 2rem;
 		text-align: center;
 		cursor: pointer;
-		transition: border-color 0.2s, background-color 0.2s;
+		transition:
+			border-color 0.2s,
+			background-color 0.2s;
 	}
 
 	.drop-zone:hover,

@@ -8,7 +8,7 @@ export function formatDateGMT(dateStr: string): string {
 		year: 'numeric',
 		month: 'short',
 		day: '2-digit',
-		timeZone: 'UTC'
+		timeZone: 'UTC',
 	});
 }
 

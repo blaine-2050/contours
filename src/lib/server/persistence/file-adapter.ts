@@ -14,14 +14,17 @@ const mimeTypes: Record<string, string> = {
 	'.png': 'image/png',
 	'.gif': 'image/gif',
 	'.webp': 'image/webp',
-	'.svg': 'image/svg+xml'
+	'.svg': 'image/svg+xml',
 };
 
 function parseCategories(data: Record<string, unknown>): string[] {
 	if (!data.categories) return [];
 	if (Array.isArray(data.categories)) return data.categories.map(String);
 	if (typeof data.categories === 'string') {
-		return data.categories.split(',').map((c) => c.trim()).filter(Boolean);
+		return data.categories
+			.split(',')
+			.map((c) => c.trim())
+			.filter(Boolean);
 	}
 	return [];
 }
@@ -64,7 +67,7 @@ export class FileAdapter implements PersistenceAdapter {
 				time: data.time ? String(data.time) : undefined,
 				author: data.author || 'Blaine',
 				categories: parseCategories(data),
-				image: data.image ? String(data.image) : undefined
+				image: data.image ? String(data.image) : undefined,
 			};
 		});
 
@@ -98,7 +101,7 @@ export class FileAdapter implements PersistenceAdapter {
 			author: data.author || 'Blaine',
 			categories: parseCategories(data),
 			image: data.image ? String(data.image) : undefined,
-			content
+			content,
 		};
 	}
 
@@ -190,7 +193,10 @@ ${data.content}`;
 
 	async addCategory(name: string): Promise<Category> {
 		const categories = await this.getCategories();
-		const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+		const id = name
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/(^-|-$)/g, '');
 
 		if (categories.some((c) => c.id === id)) {
 			return categories.find((c) => c.id === id)!;
@@ -239,7 +245,7 @@ ${data.content}`;
 				date: parseDate(data.date),
 				time: data.time ? String(data.time) : undefined,
 				author: data.author || 'Blaine',
-				summary: data.summary ? String(data.summary) : undefined
+				summary: data.summary ? String(data.summary) : undefined,
 			};
 		});
 
@@ -267,7 +273,7 @@ ${data.content}`;
 			time: data.time ? String(data.time) : undefined,
 			author: data.author || 'Blaine',
 			summary: data.summary ? String(data.summary) : undefined,
-			content
+			content,
 		};
 	}
 

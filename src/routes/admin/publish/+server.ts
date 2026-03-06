@@ -27,7 +27,7 @@ export const POST: RequestHandler = async () => {
 		posts: { inserted: 0, updated: 0, skipped: 0 },
 		stories: { inserted: 0, updated: 0, skipped: 0 },
 		images: { synced: 0 },
-		errors: [] as string[]
+		errors: [] as string[],
 	};
 
 	try {
@@ -91,7 +91,7 @@ export const POST: RequestHandler = async () => {
 		posts: results.posts.inserted + results.posts.updated,
 		stories: results.stories.inserted + results.stories.updated,
 		images: results.images.synced,
-		errors: results.errors.length
+		errors: results.errors.length,
 	});
 
 	return json(results);

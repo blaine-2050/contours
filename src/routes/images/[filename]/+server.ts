@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ params }) => {
 	return new Response(new Uint8Array(image.data), {
 		headers: {
 			'Content-Type': image.mimeType,
-			'Cache-Control': 'public, max-age=31536000'
-		}
+			'Cache-Control': 'public, max-age=31536000',
+		},
 	});
 };

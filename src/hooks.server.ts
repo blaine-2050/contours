@@ -3,7 +3,7 @@ import { initAdapter } from '$lib/server/persistence';
 import { logger } from '$lib/server/logger';
 
 // Initialize the persistence adapter at server startup.
-const adapter = await initAdapter();
+const _adapter = await initAdapter();
 logger.info('persistence adapter initialized', { mode: process.env.PERSISTENCE || 'file' });
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -23,7 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		method,
 		path,
 		status: response.status,
-		duration_ms: duration
+		duration_ms: duration,
 	});
 
 	return response;
@@ -36,7 +36,7 @@ export const handleError: HandleServerError = async ({ error, event, status, mes
 		path,
 		status,
 		message,
-		stack: error instanceof Error ? error.stack : String(error)
+		stack: error instanceof Error ? error.stack : String(error),
 	});
 
 	return { message: 'Internal error' };

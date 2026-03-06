@@ -58,7 +58,8 @@
 
 	{#if errorMessage}
 		<div class="error">
-			<strong>Error:</strong> {errorMessage}
+			<strong>Error:</strong>
+			{errorMessage}
 		</div>
 	{/if}
 

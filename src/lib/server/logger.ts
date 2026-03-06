@@ -4,7 +4,7 @@ const LEVELS: Record<LogLevel, number> = {
 	debug: 0,
 	info: 1,
 	warn: 2,
-	error: 3
+	error: 3,
 };
 
 function getConfiguredLevel(): number {
@@ -21,7 +21,7 @@ function emit(level: LogLevel, message: string, data?: Record<string, unknown>) 
 		ts: new Date().toISOString(),
 		level,
 		msg: message,
-		...data
+		...data,
 	};
 
 	const line = JSON.stringify(entry);
@@ -42,5 +42,5 @@ export const logger = {
 	/** Reload threshold from env (useful after env changes in tests) */
 	reload: () => {
 		threshold = getConfiguredLevel();
-	}
+	},
 };
