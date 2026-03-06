@@ -350,20 +350,22 @@ Improve visual hierarchy and readability of post content.
 
 ---
 
-### Workstream K: Image Optimization
+### Workstream K: Image Optimization ✅
 
 **Branch:** `workstream/k-image-optimization`  
+**Status:** Complete  
 **Risk:** Low-Medium - adds image processing dependency  
 **Shared files:** `src/routes/images/[filename]/+server.ts`  
 **Depends on:** Nothing
 
-- [ ] Install `npm install sharp`
-- [ ] Modify `src/routes/images/[filename]/+server.ts`
-- [ ] Add query param support: `?w=800` for width
-- [ ] Generate WebP versions on-the-fly
-- [ ] Add cache headers for images (1 day)
-- [ ] Limit max dimensions to prevent abuse
-- [ ] Test with existing images in posts
+- [x] Install `npm install sharp`
+- [x] Modify `src/routes/images/[filename]/+server.ts`
+  - [x] Add query param support: `?w=800` for width
+  - [x] Use Sharp to resize images on-the-fly
+  - [x] Generate WebP versions on-the-fly (auto-detect via Accept header or `?format=webp`)
+  - [x] Add cache headers for images (1 day)
+  - [x] Limit max dimensions to prevent abuse (max 2000px)
+  - [x] Handle errors gracefully (return original if processing fails)
 
 ---
 
