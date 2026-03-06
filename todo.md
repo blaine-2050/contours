@@ -112,7 +112,7 @@ Implemented persistence abstraction with file and MySQL adapters.
 **Can run in parallel:** All workstreams in this phase  
 **Merge order:** Any order (no conflicts expected)
 
-### V2 M1 - Typography & Styling
+### V2 M1 - Typography & Styling ✅
 
 Improve visual hierarchy and readability of post content.
 
@@ -120,14 +120,17 @@ Improve visual hierarchy and readability of post content.
 **Risk:** Low - isolated to CSS and font loading  
 **Shared files:** `src/routes/+layout.svelte` (adds font imports)
 
-- [ ] Add Merriweather font for headings
-  - H1: bold, larger size, slightly tighter letter-spacing
-  - H2: semi-bold or bold, smaller than H1
-  - H3: regular or semi-bold, close to body size but distinct
-- [ ] Add Source Sans Pro for body text
-- [ ] Implement indent sizing: indented text drops one heading level in size
-  - e.g., indented paragraph under H2 uses H3-level body text
-- [ ] Style blockquotes: indented, vertical bar on left
+- [x] Add Merriweather font for headings
+  - H1: 2.5rem bold, tighter letter-spacing (-0.02em)
+  - H2: 1.75rem bold, letter-spacing (-0.01em)
+  - H3: 1.25rem regular weight
+- [x] Add Source Sans Pro for body text
+- [x] Implement indent sizing: indented text drops one heading level in size
+  - Created `.indented-content` class with left border
+  - Indented paragraphs use H3-level body text (1.25rem)
+- [x] Style blockquotes: enhanced indentation and spacing
+  - Increased padding for better visual separation
+  - Added first/last-child margin fixes
 
 ---
 
