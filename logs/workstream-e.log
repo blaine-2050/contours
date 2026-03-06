@@ -1,0 +1,71 @@
+Workstream E: Caching Layer - Activity Log
+==========================================
+
+Started: 2026-03-06T12:30:10+08:00
+Agent: Kimi
+Branch: workstream/e-caching-layer
+
+[2026-03-06T12:30:10+08:00] Starting Workstream E: Caching Layer
+- Status updated to [IN PROGRESS]
+- Installing node-cache package
+- Will create src/lib/server/cache.ts with Cache wrapper
+- Will cache getAllPosts(), getAllStories(), getCategories()
+- Will add cache invalidation on mutations
+
+[2026-03-06T12:32:00+08:00] Installed node-cache package
+- Added to package.json
+- 2 packages installed (node-cache + clone)
+
+[2026-03-06T12:33:00+08:00] Created src/lib/server/cache.ts
+- NodeCache initialized with stdTTL from env (default 300s = 5 min)
+- Exported getCached() wrapper for cache-aside pattern
+- Exported setCache(), deleteCache(), deleteCachePattern()
+- Exported flushCache(), getCacheStats()
+- Exported CACHE_KEYS constant for cache key management
+- Integrated with logger for structured logging
+
+[2026-03-06T12:36:00+08:00] Updated FileAdapter with caching
+- Wrapped getAllPosts() with getCached(CACHE_KEYS.POSTS_ALL)
+- Wrapped getAllStories() with getCached(CACHE_KEYS.STORIES_ALL)
+- Wrapped getCategories() with getCached(CACHE_KEYS.CATEGORIES_ALL)
+- Added deleteCache(CACHE_KEYS.POSTS_ALL) in createPost()
+- Added deleteCache(CACHE_KEYS.CATEGORIES_ALL) in addCategory()
+- Added deleteCache(CACHE_KEYS.CATEGORIES_ALL) in removeCategory()
+- Added deleteCache(CACHE_KEYS.STORIES_ALL) in createStory()
+
+[2026-03-06T12:40:00+08:00] Updated MysqlAdapter with caching
+- Added import for cache functions
+- Wrapped getAllPosts() with getCached(CACHE_KEYS.POSTS_ALL)
+- Wrapped getAllStories() with getCached(CACHE_KEYS.STORIES_ALL)
+- Wrapped getCategories() with getCached(CACHE_KEYS.CATEGORIES_ALL)
+- Added deleteCache(CACHE_KEYS.POSTS_ALL) in createPost()
+- Added deleteCache(CACHE_KEYS.CATEGORIES_ALL) in addCategory()
+- Added deleteCache(CACHE_KEYS.CATEGORIES_ALL) in removeCategory()
+- Added deleteCache(CACHE_KEYS.STORIES_ALL) in createStory()
+
+[2026-03-06T12:43:00+08:00] Updated .env.example
+- Added CACHE_TTL environment variable documentation
+
+[2026-03-06T12:44:00+08:00] Testing
+- Running type check: ✓ Passed (0 errors, 1 warning unrelated to caching)
+- Running unit tests: ✓ Passed (28 tests)
+- Cache initialization logged: "Cache initialized { stdTTL: 300 }"
+
+[2026-03-06T12:45:00+08:00] Completed Workstream E
+- Updated todo.md to mark all tasks as [x]
+- Updated .agent-status.md to mark E as [DONE]
+- Ready to commit and merge
+
+Cache Keys:
+- posts:all - Cached getAllPosts() results
+- stories:all - Cached getAllStories() results  
+- categories:all - Cached getCategories() results
+
+Cache Invalidation:
+- createPost() clears posts:all
+- createStory() clears stories:all
+- addCategory() clears categories:all
+- removeCategory() clears categories:all
+
+Environment Variables:
+- CACHE_TTL - Cache TTL in seconds (default: 300 = 5 minutes)

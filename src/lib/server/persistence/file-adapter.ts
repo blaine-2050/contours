@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getCached, deleteCache, CACHE_KEYS } from '../cache.js';
 import type { Post, PostMeta, Category, Story, StoryMeta, SearchResult } from './models.js';
 import type { PersistenceAdapter, CreatePostData, CreateStoryData, ImageData } from './types.js';
 
@@ -48,33 +49,35 @@ export class FileAdapter implements PersistenceAdapter {
 	// --- Posts ---
 
 	async getAllPosts(): Promise<PostMeta[]> {
-		if (!fs.existsSync(postsDirectory)) {
-			return [];
-		}
+		return getCached(CACHE_KEYS.POSTS_ALL, async () => {
+			if (!fs.existsSync(postsDirectory)) {
+				return [];
+			}
 
-		const files = fs.readdirSync(postsDirectory).filter((file) => file.endsWith('.md'));
+			const files = fs.readdirSync(postsDirectory).filter((file) => file.endsWith('.md'));
 
-		const posts = files.map((filename) => {
-			const slug = filename.replace(/\.md$/, '');
-			const filePath = path.join(postsDirectory, filename);
-			const fileContents = fs.readFileSync(filePath, 'utf8');
-			const { data } = matter(fileContents);
+			const posts = files.map((filename) => {
+				const slug = filename.replace(/\.md$/, '');
+				const filePath = path.join(postsDirectory, filename);
+				const fileContents = fs.readFileSync(filePath, 'utf8');
+				const { data } = matter(fileContents);
 
-			return {
-				slug,
-				title: data.title || slug,
-				date: parseDate(data.date),
-				time: data.time ? String(data.time) : undefined,
-				author: data.author || 'Blaine',
-				categories: parseCategories(data),
-				image: data.image ? String(data.image) : undefined,
-			};
-		});
+				return {
+					slug,
+					title: data.title || slug,
+					date: parseDate(data.date),
+					time: data.time ? String(data.time) : undefined,
+					author: data.author || 'Blaine',
+					categories: parseCategories(data),
+					image: data.image ? String(data.image) : undefined,
+				};
+			});
 
-		return posts.sort((a, b) => {
-			const dateA = new Date(`${a.date}T${a.time || '00:00'}:00Z`);
-			const dateB = new Date(`${b.date}T${b.time || '00:00'}:00Z`);
-			return dateB.getTime() - dateA.getTime();
+			return posts.sort((a, b) => {
+				const dateA = new Date(`${a.date}T${a.time || '00:00'}:00Z`);
+				const dateB = new Date(`${b.date}T${b.time || '00:00'}:00Z`);
+				return dateB.getTime() - dateA.getTime();
+			});
 		});
 	}
 
@@ -130,6 +133,9 @@ ${data.content}`;
 		const filePath = path.join(postsDirectory, `${slug}.md`);
 		fs.writeFileSync(filePath, frontmatter);
 
+		// Invalidate posts cache
+		deleteCache(CACHE_KEYS.POSTS_ALL);
+
 		return slug;
 	}
 
@@ -183,12 +189,14 @@ ${data.content}`;
 	// --- Categories ---
 
 	async getCategories(): Promise<Category[]> {
-		ensureDataDir();
-		if (!fs.existsSync(categoriesFile)) {
-			return [];
-		}
-		const data = fs.readFileSync(categoriesFile, 'utf8');
-		return JSON.parse(data);
+		return getCached(CACHE_KEYS.CATEGORIES_ALL, async () => {
+			ensureDataDir();
+			if (!fs.existsSync(categoriesFile)) {
+				return [];
+			}
+			const data = fs.readFileSync(categoriesFile, 'utf8');
+			return JSON.parse(data);
+		});
 	}
 
 	async addCategory(name: string): Promise<Category> {
@@ -208,6 +216,9 @@ ${data.content}`;
 		ensureDataDir();
 		fs.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2));
 
+		// Invalidate categories cache
+		deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+
 		return category;
 	}
 
@@ -221,38 +232,44 @@ ${data.content}`;
 
 		ensureDataDir();
 		fs.writeFileSync(categoriesFile, JSON.stringify(filtered, null, 2));
+
+		// Invalidate categories cache
+		deleteCache(CACHE_KEYS.CATEGORIES_ALL);
+
 		return true;
 	}
 
 	// --- Stories ---
 
 	async getAllStories(): Promise<StoryMeta[]> {
-		if (!fs.existsSync(storiesDirectory)) {
-			return [];
-		}
+		return getCached(CACHE_KEYS.STORIES_ALL, async () => {
+			if (!fs.existsSync(storiesDirectory)) {
+				return [];
+			}
 
-		const files = fs.readdirSync(storiesDirectory).filter((file) => file.endsWith('.md'));
+			const files = fs.readdirSync(storiesDirectory).filter((file) => file.endsWith('.md'));
 
-		const stories = files.map((filename) => {
-			const slug = filename.replace(/\.md$/, '');
-			const filePath = path.join(storiesDirectory, filename);
-			const fileContents = fs.readFileSync(filePath, 'utf8');
-			const { data } = matter(fileContents);
+			const stories = files.map((filename) => {
+				const slug = filename.replace(/\.md$/, '');
+				const filePath = path.join(storiesDirectory, filename);
+				const fileContents = fs.readFileSync(filePath, 'utf8');
+				const { data } = matter(fileContents);
 
-			return {
-				slug,
-				title: data.title || slug,
-				date: parseDate(data.date),
-				time: data.time ? String(data.time) : undefined,
-				author: data.author || 'Blaine',
-				summary: data.summary ? String(data.summary) : undefined,
-			};
-		});
+				return {
+					slug,
+					title: data.title || slug,
+					date: parseDate(data.date),
+					time: data.time ? String(data.time) : undefined,
+					author: data.author || 'Blaine',
+					summary: data.summary ? String(data.summary) : undefined,
+				};
+			});
 
-		return stories.sort((a, b) => {
-			const dateA = new Date(`${a.date}T${a.time || '00:00'}:00Z`);
-			const dateB = new Date(`${b.date}T${b.time || '00:00'}:00Z`);
-			return dateB.getTime() - dateA.getTime();
+			return stories.sort((a, b) => {
+				const dateA = new Date(`${a.date}T${a.time || '00:00'}:00Z`);
+				const dateB = new Date(`${b.date}T${b.time || '00:00'}:00Z`);
+				return dateB.getTime() - dateA.getTime();
+			});
 		});
 	}
 
@@ -300,6 +317,9 @@ ${data.content}`;
 
 		const filePath = path.join(storiesDirectory, `${slug}.md`);
 		fs.writeFileSync(filePath, frontmatter);
+
+		// Invalidate stories cache
+		deleteCache(CACHE_KEYS.STORIES_ALL);
 
 		return slug;
 	}

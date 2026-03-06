@@ -285,21 +285,22 @@ Improve visual hierarchy and readability of post content.
 
 ---
 
-### Workstream E: Caching Layer
+### Workstream E: Caching Layer ✅
 
 **Branch:** `workstream/e-caching-layer`  
+**Status:** Complete  
 **Risk:** Medium - can cause stale data if invalidation fails  
 **Shared files:** `src/lib/server/cache.ts` (new), persistence files (add cache calls)  
 **Depends on:** Nothing  
 **Note:** Coordinate with Workstream J if both modify adapters
 
-- [ ] Install `npm install node-cache`
-- [ ] Create `src/lib/server/cache.ts` with Cache wrapper
-- [ ] Cache `getAllPosts()` results with 5-minute TTL
-- [ ] Cache `getAllStories()` results with 5-minute TTL
-- [ ] Cache `getCategories()` results with 5-minute TTL
-- [ ] Add cache invalidation on create/update/delete operations
-- [ ] Add `CACHE_TTL` env var for configuration
+- [x] Install `npm install node-cache`
+- [x] Create `src/lib/server/cache.ts` with Cache wrapper
+- [x] Cache `getAllPosts()` results with 5-minute TTL
+- [x] Cache `getAllStories()` results with 5-minute TTL
+- [x] Cache `getCategories()` results with 5-minute TTL
+- [x] Add cache invalidation on create/update/delete operations
+- [x] Add `CACHE_TTL` env var for configuration
 
 ---
 
