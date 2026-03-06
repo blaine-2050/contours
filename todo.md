@@ -264,11 +264,13 @@ Improve visual hierarchy and readability of post content.
 **Shared files:** `src/lib/server/persistence/mysql-adapter.ts` (major changes)  
 **Depends on:** Nothing
 
-- [ ] Modify `src/lib/server/persistence/mysql-adapter.ts`
-- [ ] Switch from `createConnection()` to `createPool()`
-- [ ] Configure pool settings (connectionLimit: 10, timeouts)
-- [ ] Test with `npm run dev:db` - verify connections are reused
-- [ ] Add pool end() cleanup on server shutdown
+- [x] Modify `src/lib/server/persistence/mysql-adapter.ts`
+- [x] Switch from `createConnection()` to `createPool()` (already was pool, added config)
+- [x] Configure pool settings (connectionLimit: 10, acquireTimeout: 60000, timeout: 60000, queueLimit: 0)
+- [x] Type check passed (0 errors)
+- [x] Add pool end() cleanup on server shutdown
+  - Exported `cleanupMySQLPool()` function
+  - Added SIGTERM and SIGINT handlers in hooks.server.ts
 
 ---
 
