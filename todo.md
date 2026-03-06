@@ -209,22 +209,33 @@ Improve visual hierarchy and readability of post content.
 **Can run in parallel:** Workstreams B, C within this phase  
 **Merge order:** C (headers) before B (auth) recommended
 
-### Workstream C: Security Headers & CSP
+### Workstream C: Security Headers & CSP ✅
 
 **Branch:** `workstream/c-security-headers`  
+**Status:** Complete  
 **Risk:** Medium - CSP can break inline scripts  
-**Shared files:** `src/hooks.server.ts` (creates or modifies)  
+**Shared files:** `src/hooks.server.ts` (modifies)  
 **Depends on:** Nothing  
 **Note:** Test admin forms thoroughly after implementing CSP
 
-- [ ] Create `src/hooks.server.ts` CSP middleware
-- [ ] Add Content-Security-Policy header
-- [ ] Add X-Frame-Options header
-- [ ] Add X-Content-Type-Options header
-- [ ] Test that admin form submissions still work with CSP
+- [x] Modify `src/hooks.server.ts` to add CSP middleware
+- [x] Add Content-Security-Policy header with directives:
+  - default-src 'self'
+  - script-src 'self'  
+  - style-src 'self' 'unsafe-inline' https://fonts.googleapis.com
+  - font-src 'self' https://fonts.gstatic.com
+  - img-src 'self' data: blob:
+  - connect-src 'self'
+  - frame-ancestors 'none'
+  - base-uri 'self'
+  - form-action 'self'
+- [x] Add X-Frame-Options: DENY header
+- [x] Add X-Content-Type-Options: nosniff header
+- [x] Add Referrer-Policy: strict-origin-when-cross-origin header
+- [x] Test that admin form submissions still work with CSP
 
 **Future work discovered:**
-- [ ] Move any inline event handlers to external scripts if CSP blocks them
+- None - Svelte compiles event handlers properly, no inline script issues
 
 ---
 

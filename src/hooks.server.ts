@@ -24,13 +24,52 @@ async function handleShutdown(signal: string): Promise<void> {
 process.on('SIGTERM', () => handleShutdown('SIGTERM'));
 process.on('SIGINT', () => handleShutdown('SIGINT')); // Handle Ctrl+C
 
+// Security headers configuration
+const SECURITY_HEADERS = {
+	// Prevent clickjacking attacks
+	'X-Frame-Options': 'DENY',
+	// Prevent MIME type sniffing
+	'X-Content-Type-Options': 'nosniff',
+	// Control referrer information
+	'Referrer-Policy': 'strict-origin-when-cross-origin'
+};
+
+// Content Security Policy directives
+const CSP_DIRECTIVES = {
+	'default-src': ["'self'"],
+	'script-src': ["'self'"],
+	'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+	'font-src': ["'self'", 'https://fonts.gstatic.com'],
+	'img-src': ["'self'", 'data:', 'blob:'],
+	'connect-src': ["'self'"],
+	'frame-ancestors': ["'none'"],
+	'base-uri': ["'self'"],
+	'form-action': ["'self'"]
+};
+
+// Build CSP header string from directives
+function buildCSP(): string {
+	return Object.entries(CSP_DIRECTIVES)
+		.map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
+		.join('; ');
+}
+
+function addSecurityHeaders(response: Response): void {
+	for (const [header, value] of Object.entries(SECURITY_HEADERS)) {
+		response.headers.set(header, value);
+	}
+	response.headers.set('Content-Security-Policy', buildCSP());
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const { method, url } = event.request;
 	const path = new URL(url).pathname;
 
 	// Skip logging for static assets
 	if (path.startsWith('/_app/') || path.startsWith('/favicon')) {
-		return resolve(event);
+		const response = await resolve(event);
+		addSecurityHeaders(response);
+		return response;
 	}
 
 	// Run request handling within a logging context with correlation ID
@@ -38,6 +77,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const start = performance.now();
 		const response = await resolve(event);
 		const duration = Math.round(performance.now() - start);
+
+		// Add security headers to all responses
+		addSecurityHeaders(response);
 
 		logger.info('request completed', {
 			status: response.status,
