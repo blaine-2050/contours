@@ -1,6 +1,42 @@
 # Contours Todo
 
-**Multi-Agent Coordination:** See `AGENTS.md` for branch naming, workflow rules, and conflict resolution.
+**Current Focus:** Railway Deployment with Shared DB & Narrative Posts  
+**Status:** Ready for Production Deploy  
+**See:** `DEPLOYMENT.md` for detailed deployment guide
+
+---
+
+## Deployment Checklist (IN PROGRESS)
+
+### Pre-Deployment
+- [ ] Run `npm run test` (75 tests should pass)
+- [ ] Run `npm run check` (0 errors)
+- [ ] Run `npm run build` (successful build)
+- [ ] Verify `.env.production` has all required variables
+- [ ] Review `DEPLOYMENT.md` for full checklist
+
+### Database
+- [ ] Run `npm run db:migrate` against Railway MySQL
+- [ ] Verify tables created with `contours_` prefix
+- [ ] Test database connectivity
+
+### Deployment
+- [ ] Push to origin: `git push origin main`
+- [ ] Deploy via Railway CLI: `railway up`
+- [ ] Verify environment variables in Railway dashboard
+- [ ] Run smoke tests against production URL
+
+### Post-Deployment
+- [ ] Verify `/health` endpoint returns 200
+- [ ] Verify homepage loads with narrative posts
+- [ ] Test admin login with production credentials
+- [ ] Verify image optimization works (`/images/test.png?w=400`)
+
+---
+
+## Multi-Agent Coordination
+
+See `AGENTS.md` for branch naming, workflow rules, and conflict resolution.
 
 ---
 
