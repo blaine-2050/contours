@@ -4,6 +4,31 @@
 **Target:** Railway Production  
 **Database:** Shared MySQL with prefixed tables (`contours_*`)
 
+**Deployment Method:** GitHub Actions (automated) or Railway CLI (manual)
+
+---
+
+## Quick Start (Automated)
+
+Once GitHub Actions is configured, deployment is automatic:
+
+```
+You: git push origin main
+    ↓
+GitHub Actions: Tests → Build → Deploy
+    ↓
+Railway: Live site updated
+```
+
+**Setup time:** 5 minutes  
+**Deployment time:** 2-3 minutes after push
+
+See `.github/workflows/README.md` for setup instructions.
+
+---
+
+## Architecture Overview
+
 ---
 
 ## Overview
@@ -60,10 +85,57 @@ PORT=3000
 
 ## Deployment Steps
 
-### Step 1: Database Migration
+### Option A: Automated (GitHub Actions) - RECOMMENDED
+
+**Prerequisites:**
+1. GitHub repository connected to Railway OR `RAILWAY_TOKEN` secret set
+2. Environment variables configured in Railway dashboard
+3. Database migrated (one-time setup)
+
+**Deploy:**
+```bash
+# Just push to main
+git checkout main
+git status        # should be clean
+git push origin main
+
+# GitHub Actions handles the rest:
+# 1. Runs tests (75 must pass)
+# 2. Runs type check (0 errors)
+# 3. Builds project
+# 4. Deploys to Railway
+```
+
+**Monitor:**
+- GitHub: https://github.com/blaine-2050/contours/actions
+- Railway: https://railway.app/dashboard
+
+### Option B: Manual (Railway CLI)
+
+**Use when:**
+- GitHub Actions is down
+- Emergency hotfix needed
+- Testing deployment process
+
+```bash
+# 1. Push code
+git checkout main
+git push origin main
+
+# 2. Deploy via CLI
+railway login
+railway up
+
+# 3. Run migrations (if needed)
+export DATABASE_URL="your-railway-db-url"
+npm run db:migrate
+```
+
+### Step 1: Database Migration (One-time)
 
 ```bash
 # Run migrations against Railway MySQL
+export DATABASE_URL="mysql://user:pass@host:port/railway"
 npm run db:migrate
 ```
 
@@ -75,31 +147,6 @@ This creates:
 - `contours_images` (with timestamps)
 
 All tables use the `contours_` prefix per SHARED_DB.md conventions.
-
-### Step 2: Push to GitHub
-
-```bash
-# Ensure main is clean
-git checkout main
-git status  # should be clean
-
-# Push to origin
-git push origin main
-```
-
-### Step 3: Railway Deployment
-
-```bash
-# Using Railway CLI
-railway login
-railway link  # if not already linked
-railway up
-
-# Or via Railway dashboard:
-# 1. Connect GitHub repo
-# 2. Configure environment variables
-# 3. Deploy
-```
 
 ### Step 4: Verify Deployment
 
