@@ -3,7 +3,7 @@
  * Generates blog posts from git commit history
  */
 
-import type { Commit, GeneratedPost, PostFrontmatter, GroupedCommits } from './types';
+import type { Commit, GeneratedPost, PostFrontmatter, GroupedCommits, GeneratorOptions } from './types';
 import { groupCommitsByType, getShortSha, classifyCommit } from './git';
 
 /**
@@ -12,9 +12,9 @@ import { groupCommitsByType, getShortSha, classifyCommit } from './git';
  * @param weekStart - Start of the week (YYYY-MM-DD)
  * @returns Generated post with frontmatter and content
  */
-export function generatePost(commits: Commit[], weekStart: string): GeneratedPost {
-	const frontmatter = createFrontmatter(commits, weekStart);
-	const content = generateContent(commits, weekStart);
+export function generatePost(commits: Commit[], weekStart: string, options?: GeneratorOptions): GeneratedPost {
+	const frontmatter = createFrontmatter(commits, weekStart, options);
+	const content = generateContent(commits, weekStart, options);
 
 	return {
 		frontmatter,
@@ -28,15 +28,20 @@ export function generatePost(commits: Commit[], weekStart: string): GeneratedPos
  * @param weekStart - Start of the week (YYYY-MM-DD)
  * @returns Post frontmatter
  */
-function createFrontmatter(commits: Commit[], weekStart: string): PostFrontmatter {
+function createFrontmatter(commits: Commit[], weekStart: string, options?: GeneratorOptions): PostFrontmatter {
 	const commitCount = commits.length;
-	const endOfWeek = getEndOfWeek(weekStart);
-	
+	const repoName = options?.repoName || 'Contours';
+	const author = options?.author || 'Contours Bot';
+
+	const title = options?.repoName
+		? `${repoName} - Week of ${weekStart} - ${commitCount} commits`
+		: `Week of ${weekStart} - ${commitCount} commits`;
+
 	return {
-		title: `Week of ${weekStart} - ${commitCount} commits`,
+		title,
 		date: weekStart,
 		time: '12:00',
-		author: 'Contours Bot',
+		author,
 		categories: ['dev-journal'],
 		draft: true
 	};
@@ -48,16 +53,17 @@ function createFrontmatter(commits: Commit[], weekStart: string): PostFrontmatte
  * @param weekStart - Start of the week (YYYY-MM-DD)
  * @returns Markdown content
  */
-function generateContent(commits: Commit[], weekStart: string): string {
+function generateContent(commits: Commit[], weekStart: string, options?: GeneratorOptions): string {
 	if (commits.length === 0) {
 		return generateEmptyContent(weekStart);
 	}
 
 	const lines: string[] = [];
 	const endOfWeek = getEndOfWeek(weekStart);
-	
+	const projectName = options?.repoName || 'Contours';
+
 	// Summary paragraph
-	lines.push(`This week we made **${commits.length} commits** to the Contours project.`);
+	lines.push(`This week we made **${commits.length} commits** to the ${projectName} project.`);
 	lines.push('');
 	
 	// Add date range
@@ -182,7 +188,10 @@ function getEndOfWeek(weekStart: string): string {
  * @param weekStart - Start of the week
  * @returns URL-friendly slug
  */
-export function generateSlug(weekStart: string): string {
+export function generateSlug(weekStart: string, repoName?: string): string {
+	if (repoName) {
+		return `dev-journal-${repoName.toLowerCase()}-week-of-${weekStart}`;
+	}
 	return `dev-journal-week-of-${weekStart}`;
 }
 

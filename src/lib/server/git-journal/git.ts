@@ -15,7 +15,7 @@ const execAsync = promisify(exec);
  * @param until - End date (YYYY-MM-DD)
  * @returns Array of commits
  */
-export async function getCommits(since: string, until: string): Promise<Commit[]> {
+export async function getCommits(since: string, until: string, cwd?: string): Promise<Commit[]> {
 	// Validate date format (YYYY-MM-DD)
 	const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 	if (!dateRegex.test(since) || !dateRegex.test(until)) {
@@ -27,7 +27,7 @@ export async function getCommits(since: string, until: string): Promise<Commit[]
 
 	try {
 		const { stdout } = await execAsync(command, {
-			cwd: process.cwd(),
+			cwd: cwd || process.cwd(),
 			encoding: 'utf-8'
 		});
 
@@ -165,11 +165,11 @@ export async function getLatestCommit(): Promise<Commit | null> {
  * Get the date of the first commit in the repository
  * @returns Date string or null
  */
-export async function getFirstCommitDate(): Promise<string | null> {
+export async function getFirstCommitDate(cwd?: string): Promise<string | null> {
 	try {
 		const { stdout } = await execAsync(
 			'git log --reverse --pretty=format:"%ad" --date=short | head -1',
-			{ cwd: process.cwd(), encoding: 'utf-8' }
+			{ cwd: cwd || process.cwd(), encoding: 'utf-8' }
 		);
 
 		return stdout?.trim() || null;

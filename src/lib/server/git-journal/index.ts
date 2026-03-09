@@ -26,11 +26,22 @@ export {
 	classifyCommit,
 	groupCommitsByType 
 } from './git.js';
-export { 
-	generatePost, 
-	generateSlug, 
-	formatAsMarkdown 
+export {
+	generatePost,
+	generateSlug,
+	formatAsMarkdown
 } from './generator.js';
+export {
+	listPublicRepos,
+	getGitHubCommits,
+	getEarliestCommitDate
+} from './github.js';
+export {
+	loadTracking,
+	saveTracking,
+	isWeekProcessed,
+	markWeekProcessed
+} from './tracking.js';
 
 /**
  * Validate date format (YYYY-MM-DD)

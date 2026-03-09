@@ -75,3 +75,17 @@ export type CommitType = 'feat' | 'fix' | 'docs' | 'style' | 'refactor' | 'test'
 export interface GroupedCommits {
 	[type: string]: Commit[];
 }
+
+/** Options for multi-repo post generation */
+export interface GeneratorOptions {
+	repoName?: string;    // e.g., "track-workout" (defaults to "Contours")
+	repoOwner?: string;   // e.g., "blaine-2050"
+	author?: string;      // defaults to "Contours Bot"
+}
+
+/** Tracking data per repo for duplicate prevention */
+export interface RepoTrackingData {
+	repo: string;                // "blaine-2050/contours"
+	processedWeeks: string[];    // sorted YYYY-MM-DD (Monday start)
+	lastChecked: string;         // YYYY-MM-DD
+}
