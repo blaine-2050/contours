@@ -25,7 +25,7 @@
         - time is recorded on 24 hour clock GMT
       - author defaults to Blaine
       - text of post
-    - user can switch between lite and dark modes 
+    - user can switch between lite and dark modes
     - user adds a category to dategory lists
     - user add a category to a post
     - user drags an image on to the post
@@ -39,55 +39,12 @@
 ### pragmatic technical decisions
 - the system needs to be modular so we can swap out persistence, UIUX, etc. as we progress through V1, V2...VN
 
-### deployment
-- Railway deployment from GitHub (blaine-2050)
-- See `~/Athenia/projects/CLAUDE.md § Deployment & Infrastructure` for shared conventions
-- adapter-node configured for Railway compatibility
-- Next step: provision MySQL on Railway, run migrations, deploy (V1 M2)
+### persistence env vars
+- `PERSISTENCE` — adapter selection (`file` | `mysql`)
+- `DATABASE_URL` — production MySQL connection string
+- `RAILWAY_DB_URL` — local publish to Railway DB
 
-### current status
-- V1 feature-complete (2026-01-09), persistence layer complete (2026-02-27)
-  - Home page, post view, admin create, about page
-  - Light/dark mode with localStorage persistence
-  - Category system with management UI and filtering
-  - Drag-and-drop image upload with preview
-  - 24h GMT timestamps, date/time sorting
-  - Regex search across titles and content
-  - Stories section (long-form content, links to posts)
-  - Vitest + Playwright testing infrastructure
-  - PersistenceAdapter interface with FileAdapter + MysqlAdapter
-  - "Publish to Railway" UI at `/admin/publish`
-- Next: V1 M2 (Railway deploy) — see todo.md
-
-### persistence architecture
-- `src/lib/server/persistence/` — all persistence code
-  - `models.ts` — shared interfaces (Post, Category, Story, SearchResult, etc.)
-  - `types.ts` — PersistenceAdapter interface + input types
-  - `file-adapter.ts` — reads/writes markdown files and JSON (local dev)
-  - `mysql-adapter.ts` — Drizzle ORM with mysql2 (production)
-  - `schema.ts` — Drizzle table definitions (contours_ prefixed)
-  - `index.ts` — adapter factory (getAdapter/initAdapter)
-- `src/hooks.server.ts` — initializes adapter at server startup
-- Env vars: `PERSISTENCE` (adapter selection), `DATABASE_URL` (prod MySQL), `RAILWAY_DB_URL` (local publish)
-
-### running locally
-```bash
-npm install
-npm run dev        # http://localhost:5174 (file-based persistence)
-npm run dev:db     # MySQL persistence mode (requires DATABASE_URL)
-npm run build      # production build
-npm run preview    # preview production build
-npm run db:generate # generate Drizzle migrations
-npm run db:migrate  # run Drizzle migrations
-```
-
-### testing
-```bash
-npm run test     # unit/integration tests
-npm run test:e2e # E2E tests (requires dev server)
-```
-
-## crosscutting concerns.
+## crosscutting concerns
 - this project needs to be compatable with some other projects under the /Users/dev/Athenia/projects tree. In particular we will end up with both Python and Node servers on Railway. In additiion we will have multiple apps running on both platforms.
 - This will be the first project deployed, but it will save a lot of work if we design and implement it with that type of future in mind.
 - review the sibling projects track-workout and medbridge for an overview of database needs. Right now, I think all of them can use the same DB and on Railway, MySQL is the best fit.
