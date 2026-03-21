@@ -6,6 +6,7 @@ export interface Post {
 	author: string;
 	categories: string[];
 	image?: string;
+	technical?: boolean;
 	content: string;
 }
 
@@ -17,6 +18,7 @@ export interface PostMeta {
 	author: string;
 	categories: string[];
 	image?: string;
+	technical?: boolean;
 }
 
 export interface Category {

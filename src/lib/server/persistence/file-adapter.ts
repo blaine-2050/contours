@@ -83,6 +83,7 @@ export class FileAdapter implements PersistenceAdapter {
 					author: data.author || 'Blaine',
 					categories: parseCategories(data),
 					image: data.image ? String(data.image) : undefined,
+					technical: data.technical === true,
 				};
 			});
 
@@ -117,6 +118,7 @@ export class FileAdapter implements PersistenceAdapter {
 			author: data.author || 'Blaine',
 			categories: parseCategories(data),
 			image: data.image ? String(data.image) : undefined,
+			technical: data.technical === true,
 			content,
 		};
 	}
@@ -134,12 +136,13 @@ export class FileAdapter implements PersistenceAdapter {
 
 		const timeLine = data.time ? `time: ${data.time}\n` : '';
 		const imageLine = data.image ? `image: ${data.image}\n` : '';
+		const technicalLine = data.technical ? `technical: true\n` : '';
 
 		const frontmatter = `---
 title: ${data.title}
 date: ${data.date}
 ${timeLine}author: ${data.author || 'Blaine'}
-${categoriesLine}${imageLine}---
+${categoriesLine}${imageLine}${technicalLine}---
 
 ${data.content}`;
 

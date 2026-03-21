@@ -1,9 +1,28 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { formatDateTimeGMT } from '$lib/utils/date';
-	import { dev } from '$app/environment';
+	import { dev, browser } from '$app/environment';
 
 	let { data }: { data: PageData } = $props();
+
+	let showTechnical = $state(false);
+
+	$effect(() => {
+		if (browser) {
+			const saved = localStorage.getItem('showTechnical');
+			if (saved === 'true') showTechnical = true;
+		}
+	});
+
+	$effect(() => {
+		if (browser) {
+			localStorage.setItem('showTechnical', String(showTechnical));
+		}
+	});
+
+	let visiblePosts = $derived(
+		showTechnical ? data.posts : data.posts.filter(p => !p.technical)
+	);
 </script>
 
 <svelte:head>
@@ -12,12 +31,19 @@
 
 <h1>Posts</h1>
 
+<div class="filter-bar">
+	<label class="technical-toggle">
+		<input type="checkbox" bind:checked={showTechnical} />
+		Show technical posts
+	</label>
+</div>
+
 <section>
-	{#if data.posts.length === 0}
+	{#if visiblePosts.length === 0}
 		<p>No posts yet.</p>
 	{:else}
 		<ul>
-			{#each data.posts as post}
+			{#each visiblePosts as post}
 				<li>
 					<a href="/posts/{post.slug}" class="post-title">
 						{post.title}
@@ -47,6 +73,24 @@
 <style>
 	h1 {
 		margin-bottom: 1.5rem;
+	}
+
+	.filter-bar {
+		margin-bottom: 1.5rem;
+	}
+
+	.technical-toggle {
+		font-family: var(--font-ui);
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.technical-toggle input {
+		cursor: pointer;
 	}
 
 	ul {

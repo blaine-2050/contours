@@ -92,6 +92,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 					author: row.author,
 					categories: cats.map((c) => c.categoryId),
 					image: row.image ?? undefined,
+					technical: row.technical,
 				});
 			}
 			return posts;
@@ -126,6 +127,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			author: row.author,
 			categories: cats.map((c) => c.categoryId),
 			image: row.image ?? undefined,
+			technical: row.technical,
 			content: row.content,
 		};
 	}
@@ -145,6 +147,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 			time: data.time ?? null,
 			author: data.author || 'Blaine',
 			image: data.image ?? null,
+			technical: data.technical ?? false,
 			content: data.content,
 			contentHash: hash,
 		});
@@ -362,6 +365,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				author: row.author,
 				categories: cats.map((c) => c.categoryId),
 				image: row.image ?? undefined,
+				technical: row.technical,
 				matchContext,
 			});
 		}
@@ -388,6 +392,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				time: post.time ?? null,
 				author: post.author,
 				image: post.image ?? null,
+				technical: post.technical ?? false,
 				content: post.content,
 				contentHash: post.contentHash,
 			});
@@ -417,6 +422,7 @@ export class MysqlAdapter implements PersistenceAdapter {
 				time: post.time ?? null,
 				author: post.author,
 				image: post.image ?? null,
+				technical: post.technical ?? false,
 				content: post.content,
 				contentHash: post.contentHash,
 				updatedAt: sql`CURRENT_TIMESTAMP`,

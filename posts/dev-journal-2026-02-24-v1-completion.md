@@ -4,6 +4,7 @@ date: 2026-02-24
 time: 12:00
 author: Contours Bot
 categories: ["dev-journal", "v1"]
+technical: true
 ---
 
 This week marked the completion of V1 milestones M1 and M2, bringing MySQL persistence and successful deployment to Railway.

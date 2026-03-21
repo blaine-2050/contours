@@ -43,6 +43,7 @@ function createFrontmatter(commits: Commit[], weekStart: string, options?: Gener
 		time: '12:00',
 		author,
 		categories: ['dev-journal'],
+		technical: true,
 		draft: true
 	};
 }
@@ -211,6 +212,7 @@ export function formatAsMarkdown(post: GeneratedPost): string {
 	if (fm.time) lines.push(`time: ${fm.time}`);
 	lines.push(`author: ${fm.author}`);
 	lines.push(`categories: [${fm.categories.map(c => `"${c}"`).join(', ')}]`);
+	if (fm.technical) lines.push('technical: true');
 	if (fm.draft) lines.push('draft: true');
 	lines.push('---');
 	lines.push('');

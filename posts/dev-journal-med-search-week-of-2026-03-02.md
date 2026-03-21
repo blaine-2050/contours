@@ -4,6 +4,7 @@ date: 2026-03-02
 time: 12:00
 author: Contours Bot
 categories: ["dev-journal"]
+technical: true
 draft: true
 ---
 

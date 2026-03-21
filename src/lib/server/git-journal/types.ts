@@ -19,6 +19,7 @@ export interface PostFrontmatter {
 	time?: string; // HH:MM in 24-hour GMT
 	author: string;
 	categories: string[];
+	technical?: boolean;
 	draft?: boolean;
 }
 

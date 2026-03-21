@@ -4,6 +4,7 @@ date: 2026-03-03
 time: 12:00
 author: Contours Bot
 categories: ["dev-journal", "v2"]
+technical: true
 ---
 
 A massive week with 32 commits completing V2 foundation phases 2A, 2B, and 2C - covering code quality, security, and performance.

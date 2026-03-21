@@ -8,6 +8,7 @@ export interface CreatePostData {
 	author?: string;
 	categories?: string[];
 	image?: string;
+	technical?: boolean;
 }
 
 export interface CreateStoryData {

@@ -4,6 +4,7 @@ date: 2025-12-15
 time: 12:00
 author: Contours Bot
 categories: ["dev-journal"]
+technical: true
 draft: true
 ---
 

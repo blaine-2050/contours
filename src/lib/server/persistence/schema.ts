@@ -5,6 +5,7 @@ import {
 	datetime,
 	uniqueIndex,
 	int,
+	boolean,
 	customType,
 	index,
 } from 'drizzle-orm/mysql-core';
@@ -26,6 +27,7 @@ export const contoursPosts = mysqlTable(
 		time: varchar('time', { length: 5 }), // HH:MM
 		author: varchar('author', { length: 255 }).notNull().default('Blaine'),
 		image: varchar('image', { length: 500 }),
+		technical: boolean('technical').notNull().default(false),
 		content: text('content').notNull(),
 		contentHash: varchar('content_hash', { length: 64 }).notNull(), // SHA-256 hex
 		createdAt: datetime('created_at')
