@@ -38,6 +38,19 @@ function parseDate(value: unknown): string {
 	return String(value);
 }
 
+function parseTime(value: unknown): string | undefined {
+	if (!value) return undefined;
+	const str = String(value);
+	// Already HH:MM format
+	if (/^\d{1,2}:\d{2}$/.test(str)) return str.padStart(5, '0');
+	// Numeric: YAML parsed "07:20" as 720, "13:08" as 1308
+	if (/^\d{1,4}$/.test(str)) {
+		const padded = str.padStart(4, '0');
+		return `${padded.slice(0, 2)}:${padded.slice(2)}`;
+	}
+	return str;
+}
+
 function ensureDataDir() {
 	const dataDir = path.dirname(categoriesFile);
 	if (!fs.existsSync(dataDir)) {
@@ -66,7 +79,7 @@ export class FileAdapter implements PersistenceAdapter {
 					slug,
 					title: data.title || slug,
 					date: parseDate(data.date),
-					time: data.time ? String(data.time) : undefined,
+					time: parseTime(data.time),
 					author: data.author || 'Blaine',
 					categories: parseCategories(data),
 					image: data.image ? String(data.image) : undefined,
@@ -100,7 +113,7 @@ export class FileAdapter implements PersistenceAdapter {
 			slug,
 			title: data.title || slug,
 			date: parseDate(data.date),
-			time: data.time ? String(data.time) : undefined,
+			time: parseTime(data.time),
 			author: data.author || 'Blaine',
 			categories: parseCategories(data),
 			image: data.image ? String(data.image) : undefined,
@@ -275,7 +288,7 @@ ${data.content}`;
 					slug,
 					title: data.title || slug,
 					date: parseDate(data.date),
-					time: data.time ? String(data.time) : undefined,
+					time: parseTime(data.time),
 					author: data.author || 'Blaine',
 					summary: data.summary ? String(data.summary) : undefined,
 				};
@@ -303,7 +316,7 @@ ${data.content}`;
 			slug,
 			title: data.title || slug,
 			date: parseDate(data.date),
-			time: data.time ? String(data.time) : undefined,
+			time: parseTime(data.time),
 			author: data.author || 'Blaine',
 			summary: data.summary ? String(data.summary) : undefined,
 			content,
