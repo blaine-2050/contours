@@ -5,11 +5,16 @@
  */
 
 import { json, error } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import type { RequestHandler } from './$types';
 import { generatePost, validateGenerateInput, formatAsMarkdown } from '$lib/server/git-journal';
 import { logger } from '$lib/server/logger';
 
 export const POST: RequestHandler = async ({ request }) => {
+	if (!dev) {
+		throw error(404, 'Not found');
+	}
+
 	let body: unknown;
 	
 	try {

@@ -4,11 +4,16 @@
  */
 
 import { json, error } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import type { RequestHandler } from './$types';
 import { getCommits, validateCommitQuery } from '$lib/server/git-journal';
 import { logger } from '$lib/server/logger';
 
 export const GET: RequestHandler = async ({ url }) => {
+	if (!dev) {
+		throw error(404, 'Not found');
+	}
+
 	const since = url.searchParams.get('since') || undefined;
 	const until = url.searchParams.get('until') || undefined;
 
