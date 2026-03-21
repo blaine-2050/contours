@@ -45,17 +45,27 @@
 		<ul>
 			{#each visiblePosts as post}
 				<li>
-					<a href="/posts/{post.slug}" class="post-title">
-						{post.title}
-					</a>
-					<span class="meta">{formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
-					{#if post.categories.length > 0}
-						<span class="post-categories">
-							{#each post.categories as category}
-								<a href="/category/{category}" class="category-tag">{category}</a>
-							{/each}
-						</span>
+					{#if post.image}
+						<a href="/posts/{post.slug}" class="thumbnail-link">
+							<img src="/images/{post.image}" alt="" class="thumbnail" />
+						</a>
 					{/if}
+					<div class="post-content">
+						<a href="/posts/{post.slug}" class="post-title">
+							{post.title}
+						</a>
+						<span class="meta">{formatDateTimeGMT(post.date, post.time)} by {post.author}</span>
+						{#if post.categories.length > 0}
+							<span class="post-categories">
+								{#each post.categories as category}
+									<a href="/category/{category}" class="category-tag">{category}</a>
+								{/each}
+							</span>
+						{/if}
+						{#if dev}
+							<a href="/admin/edit/{post.slug}" class="edit-link">edit</a>
+						{/if}
+					</div>
 				</li>
 			{/each}
 		</ul>
@@ -101,10 +111,30 @@
 	li {
 		padding: 1rem 0;
 		border-bottom: 1px solid var(--border);
+		display: flex;
+		gap: 1rem;
+		align-items: flex-start;
 	}
 
 	li:first-child {
 		padding-top: 0;
+	}
+
+	.thumbnail-link {
+		flex-shrink: 0;
+	}
+
+	.thumbnail {
+		width: 64px;
+		height: 64px;
+		object-fit: cover;
+		border-radius: 6px;
+		border: 1px solid var(--border);
+	}
+
+	.post-content {
+		flex: 1;
+		min-width: 0;
 	}
 
 	.post-title {
@@ -157,5 +187,18 @@
 	.category-tag:hover {
 		background: var(--link);
 		color: white;
+	}
+
+	.edit-link {
+		font-family: var(--font-ui);
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		text-decoration: none;
+		margin-top: 0.3rem;
+		display: inline-block;
+	}
+
+	.edit-link:hover {
+		color: var(--link);
 	}
 </style>

@@ -20,6 +20,17 @@ export interface CreateStoryData {
 	summary?: string;
 }
 
+export interface UpdatePostData {
+	title: string;
+	date: string;
+	time?: string;
+	content: string;
+	author?: string;
+	categories?: string[];
+	image?: string;
+	technical?: boolean;
+}
+
 export interface ImageData {
 	data: Buffer;
 	mimeType: string;
@@ -31,6 +42,7 @@ export interface PersistenceAdapter {
 	getPostsByCategory(categoryId: string): Promise<PostMeta[]>;
 	getPostBySlug(slug: string): Promise<Post | null>;
 	createPost(data: CreatePostData): Promise<string>;
+	updatePost(slug: string, data: UpdatePostData): Promise<void>;
 
 	// Images
 	savePostImage(file: File, slug: string): Promise<string>;

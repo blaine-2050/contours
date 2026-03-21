@@ -11,7 +11,7 @@ import {
 	contoursImages,
 } from './schema.js';
 import type { Post, PostMeta, Category, Story, StoryMeta, SearchResult } from './models.js';
-import type { PersistenceAdapter, CreatePostData, CreateStoryData, ImageData } from './types.js';
+import type { PersistenceAdapter, CreatePostData, UpdatePostData, CreateStoryData, ImageData } from './types.js';
 
 function contentHash(content: string): string {
 	return createHash('sha256').update(content).digest('hex');
@@ -166,6 +166,40 @@ export class MysqlAdapter implements PersistenceAdapter {
 		deleteCache(CACHE_KEYS.POSTS_ALL);
 
 		return slug;
+	}
+
+	async updatePost(slug: string, data: UpdatePostData): Promise<void> {
+		const hash = contentHash(data.content);
+
+		await this.db
+			.update(contoursPosts)
+			.set({
+				title: data.title,
+				date: data.date,
+				time: data.time ?? null,
+				author: data.author || 'Blaine',
+				image: data.image ?? null,
+				technical: data.technical ?? false,
+				content: data.content,
+				contentHash: hash,
+				updatedAt: sql`CURRENT_TIMESTAMP`,
+			})
+			.where(eq(contoursPosts.slug, slug));
+
+		// Replace categories
+		await this.db
+			.delete(contoursPostCategories)
+			.where(eq(contoursPostCategories.postSlug, slug));
+		if (data.categories && data.categories.length > 0) {
+			await this.db.insert(contoursPostCategories).values(
+				data.categories.map((catId) => ({
+					postSlug: slug,
+					categoryId: catId,
+				}))
+			);
+		}
+
+		deleteCache(CACHE_KEYS.POSTS_ALL);
 	}
 
 	// --- Images ---

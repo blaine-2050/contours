@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { getCached, deleteCache, CACHE_KEYS } from '../cache.js';
 import type { Post, PostMeta, Category, Story, StoryMeta, SearchResult } from './models.js';
-import type { PersistenceAdapter, CreatePostData, CreateStoryData, ImageData } from './types.js';
+import type { PersistenceAdapter, CreatePostData, UpdatePostData, CreateStoryData, ImageData } from './types.js';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 const storiesDirectory = path.join(process.cwd(), 'stories');
@@ -153,6 +153,33 @@ ${data.content}`;
 		deleteCache(CACHE_KEYS.POSTS_ALL);
 
 		return slug;
+	}
+
+	async updatePost(slug: string, data: UpdatePostData): Promise<void> {
+		const filePath = path.join(postsDirectory, `${slug}.md`);
+		if (!fs.existsSync(filePath)) {
+			throw new Error(`Post not found: ${slug}`);
+		}
+
+		const categoriesLine =
+			data.categories && data.categories.length > 0
+				? `categories: [${data.categories.join(', ')}]\n`
+				: '';
+
+		const timeLine = data.time ? `time: ${data.time}\n` : '';
+		const imageLine = data.image ? `image: ${data.image}\n` : '';
+		const technicalLine = data.technical ? `technical: true\n` : '';
+
+		const frontmatter = `---
+title: ${data.title}
+date: ${data.date}
+${timeLine}author: ${data.author || 'Blaine'}
+${categoriesLine}${imageLine}${technicalLine}---
+
+${data.content}`;
+
+		fs.writeFileSync(filePath, frontmatter);
+		deleteCache(CACHE_KEYS.POSTS_ALL);
 	}
 
 	// --- Images ---
