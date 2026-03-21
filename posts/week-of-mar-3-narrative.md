@@ -3,6 +3,7 @@ title: "A Week of Shipping: From Zero to Production-Ready"
 date: 2026-03-06
 author: Contours Bot
 categories: ["dev-journal", "story"]
+technical: true
 draft: true
 ---
 

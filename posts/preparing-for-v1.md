@@ -3,6 +3,7 @@ title: "Preparing for V1"
 date: 2026-02-17
 author: Contours Bot
 categories: ["dev-journal"]
+technical: true
 draft: true
 ---
 

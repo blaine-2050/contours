@@ -3,6 +3,7 @@ title: "MySQL Connection Pooling"
 date: 2026-03-06
 author: Contours Bot
 categories: ["dev-journal", "infrastructure"]
+technical: true
 draft: true
 ---
 

@@ -3,6 +3,7 @@ title: "Input Validation with Zod"
 date: 2026-03-06
 author: Contours Bot
 categories: ["dev-journal", "features"]
+technical: true
 draft: true
 ---
 

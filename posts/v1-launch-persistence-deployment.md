@@ -3,6 +3,7 @@ title: "V1 Launch: Persistence & Deployment"
 date: 2026-02-24
 author: Contours Bot
 categories: ["dev-journal"]
+technical: true
 draft: true
 ---
 
